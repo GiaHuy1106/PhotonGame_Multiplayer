@@ -1,23 +1,31 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
 {
+    public enum PlayerState { Locomotion, Attacking, Jumping }
+
+    [Header("State")]
+    public PlayerState currentState = PlayerState.Locomotion;
+
     [Header("Movement Settings")]
     public float walkSpeed = 3f;
     public float sprintSpeed = 7f;
-    public float turnSmoothTime = 0.1f;
+    public float turnSmoothTime = 0.15f;
     private float turnSmoothVelocity;
 
     [Header("Gravity & Jumping")]
     public float gravity = -9.81f;
     public float jumpHeight = 1.5f;
+    public float jumpCooldown = 1f;
+    private float jumpTimer = 0f;
     private Vector3 velocity;
-    private bool IsGrounded;
 
-    [Header("Combat")]
-    public float attackDuration = 0.8f; 
-    private bool isAttacking = false;
+    [Header("Custom Ground Check")]
+    public Transform groundCheck;     
+    public float groundDistance = 0.3f; 
+    public LayerMask groundMask;      
+    private bool isGrounded;
 
     [Header("References")]
     public Transform cam;
@@ -28,22 +36,42 @@ public class PlayerMovement : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         if (animator == null) animator = GetComponentInChildren<Animator>();
-
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
     void Update()
     {
-        IsGrounded = controller.isGrounded;
-        if (animator != null)
+        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+
+        if (animator != null) animator.SetBool("IsGrounded", isGrounded);
+        ApplyGravity();
+
+        if (jumpTimer > 0) jumpTimer -= Time.deltaTime;
+        if (!isGrounded && currentState == PlayerState.Locomotion)
         {
-            animator.SetBool("IsGrounded", IsGrounded);
+            currentState = PlayerState.Jumping;
+            if (animator != null) animator.Play("Jump_Air", 0, 0f);
         }
-        HandleAttack();
-        if (isAttacking) return;
-        HandleMovement();
-        HandleGravityAndJump();
+        switch (currentState)
+        {
+            case PlayerState.Locomotion:
+                HandleMovement();
+                HandleJumpInput();
+                HandleAttackInput();
+                break;
+
+            case PlayerState.Jumping:
+                HandleMovement();
+                if (isGrounded && velocity.y < 0)
+                {
+                    currentState = PlayerState.Locomotion;
+                }
+                break;
+
+            case PlayerState.Attacking:
+                break;
+        }
     }
 
     private void HandleMovement()
@@ -54,18 +82,12 @@ public class PlayerMovement : MonoBehaviour
 
         bool isSprinting = Input.GetKey(KeyCode.LeftShift);
         float currentSpeed = isSprinting ? sprintSpeed : walkSpeed;
+
         float inputMagnitude = direction.magnitude;
         float animationSpeed = 0f;
 
-        if (inputMagnitude > 0)
-        {
-            animationSpeed = isSprinting ? 1f : 0.5f;
-        }
-
-        if (animator != null)
-        {
-            animator.SetFloat("Speed", animationSpeed, 0.1f, Time.deltaTime);
-        }
+        if (inputMagnitude > 0) animationSpeed = isSprinting ? 1f : 0.5f;
+        if (animator != null) animator.SetFloat("Speed", animationSpeed, 0.15f, Time.deltaTime);
 
         if (direction.magnitude >= 0.1f)
         {
@@ -73,49 +95,44 @@ public class PlayerMovement : MonoBehaviour
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
-            Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+            Vector3 moveDir = Quaternion.Euler(0f, angle, 0f) * Vector3.forward;
             controller.Move(moveDir.normalized * currentSpeed * Time.deltaTime);
         }
     }
 
-    private void HandleGravityAndJump()
+    private void HandleJumpInput()
     {
-        if (IsGrounded && velocity.y < 0)
-        {
-            velocity.y = -2f;
-        }
-
-        if (Input.GetButtonDown("Jump") && IsGrounded)
+        if (Input.GetButtonDown("Jump") && isGrounded && jumpTimer <= 0f)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
-
-            if (animator != null)
-            {
-                animator.SetTrigger("Jump");
-            }
+            jumpTimer = jumpCooldown;
+            if (animator != null) animator.SetTrigger("Jump");
+            currentState = PlayerState.Jumping;
         }
+    }
 
+    private void ApplyGravity()
+    {
+        if (isGrounded && velocity.y < 0) velocity.y = -2f;
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
     }
 
-    private void HandleAttack()
+    private void HandleAttackInput()
     {
-        if (Input.GetButtonDown("Fire1") && IsGrounded && !isAttacking)
+        if (Input.GetButtonDown("Fire1") && isGrounded)
         {
             if (animator != null)
             {
                 animator.SetTrigger("Attack");
                 animator.SetFloat("Speed", 0f);
             }
-
-            isAttacking = true;
-            Invoke(nameof(ResetAttack), attackDuration);
+            currentState = PlayerState.Attacking;
         }
     }
 
-    private void ResetAttack()
+    public void ResetAttack()
     {
-        isAttacking = false;
+        currentState = PlayerState.Locomotion;
     }
 }

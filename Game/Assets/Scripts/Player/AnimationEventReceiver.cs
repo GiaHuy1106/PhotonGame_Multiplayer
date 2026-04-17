@@ -1,16 +1,39 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class AnimationEventReceiver : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    [Header("VFX References")]
+    public ParticleSystem slashVFX;
+
+    private PlayerMovement playerMovement;
+
     void Start()
     {
-        
+        playerMovement = GetComponentInParent<PlayerMovement>();
+        if (slashVFX != null)
+        {
+            slashVFX.Stop();
+        }
     }
-
-    // Update is called once per frame
-    void Update()
+    public void StartSlash()
     {
-        
+        if (slashVFX != null)
+        {
+            slashVFX.Play();
+        }
+    }
+    public void EndSlash()
+    {
+        if (slashVFX != null)
+        {
+            slashVFX.Stop();
+        }
+    }
+    public void FinishAttack()
+    {
+        if (playerMovement != null)
+        {
+            playerMovement.ResetAttack();
+        }
     }
 }
