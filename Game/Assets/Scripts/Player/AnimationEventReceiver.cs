@@ -6,6 +6,14 @@ public class AnimationEventReceiver : MonoBehaviour
     public ParticleSystem slashVFX;
 
     private PlayerMovement playerMovement;
+    public SwordDamage swordScript;
+    [Header("Audio References")]
+    public AudioSource footstepAudioSource;
+    public AudioSource weaponAudioSource;   
+
+    [Header("Audio Clips")]
+    public AudioClip[] footstepClips; 
+    public AudioClip slashClip;      
 
     void Start()
     {
@@ -17,13 +25,19 @@ public class AnimationEventReceiver : MonoBehaviour
     }
     public void StartSlash()
     {
+        swordScript.EnableDamage();
         if (slashVFX != null)
         {
             slashVFX.Play();
         }
+        if (weaponAudioSource != null && slashClip != null)
+        {
+            weaponAudioSource.PlayOneShot(slashClip);
+        }
     }
     public void EndSlash()
     {
+        swordScript.DisableDamage();
         if (slashVFX != null)
         {
             slashVFX.Stop();
@@ -34,6 +48,14 @@ public class AnimationEventReceiver : MonoBehaviour
         if (playerMovement != null)
         {
             playerMovement.ResetAttack();
+        }
+    }
+    public void PlayFootstep()
+    {
+        if (footstepAudioSource != null && footstepClips.Length > 0)
+        {
+            int index = Random.Range(0, footstepClips.Length);
+            footstepAudioSource.PlayOneShot(footstepClips[index]);
         }
     }
 }

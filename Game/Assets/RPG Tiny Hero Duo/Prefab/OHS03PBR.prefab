@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 8158787969259999212}
   - component: {fileID: 6259195511646583590}
   - component: {fileID: -7442539923772300817}
+  - component: {fileID: 1911703342087002484}
+  - component: {fileID: 71742097099841483}
   m_Layer: 0
   m_Name: OHS03PBR
   m_TagString: Untagged
@@ -228,6 +230,40 @@ TrailRenderer:
   m_Autodestruct: 0
   m_Emitting: 0
   m_ApplyActiveColorSpace: 1
+--- !u!65 &1911703342087002484
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5610884078883986163}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.09419648, y: 1.0527263, z: 0.08912742}
+  m_Center: {x: 0.013378918, y: 0.68504083, z: -0.000000037252903}
+--- !u!114 &71742097099841483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5610884078883986163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e9772afc3cbf8f4eaf051c21c90fe3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SwordDamage
+  damageAmount: 20
 --- !u!1001 &675175531555272648
 PrefabInstance:
   m_ObjectHideFlags: 0
