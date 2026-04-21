@@ -1,77 +1,112 @@
-using UnityEngine;
-using UnityEngine.UI;
-
+ using UnityEngine;
 public class instructionFloating : MonoBehaviour
 {
+    public static instructionFloating Instance { get; private set; }
+
+    [Header("Lever")]
+    public Transform target; // object (lever)
+    public Transform leverHandle; // handle của lever để xoay
+
+    [Header("Door")]
+    public Transform door; // cửa để mở
+    public float doorOpenHeight = 3f; // độ cao cửa sẽ chạy lên
+    public float doorOpenSpeed = 2f; // tốc độ mở cửa
+
     [Header("UI")]
-    public GameObject instructionUI;   // panel chứa icon E
-    public Image instructionIcon;      // hình nút E
+    public GameObject instructionUI;
+    public Vector3 offset = new Vector3(0, 2f, 0); // cao hơn đầu object
 
-    [Header("Target")]
-    public GameObject lever;
+    private Camera cam;
+    private bool isDoorOpening = false;
+    private bool hasInteracted = false;
+    private Vector3 doorClosedPosition;
+    private Vector3 doorOpenPosition;
 
-    [Header("Floating")]
-    [SerializeField] private float floatHeight = 0.3f;
-    [SerializeField] private float floatSpeed = 2f;
-
-    private Vector3 startPos;
-    private bool isPlayerInRange = false;
+    void Awake()
+    {
+        Instance = this;
+    }
 
     void Start()
     {
-        instructionUI.SetActive(false);
-        startPos = instructionUI.transform.localPosition;
+        cam = Camera.main;
+
+        if (instructionUI != null)
+        {
+            instructionUI.SetActive(false);
+        }
+
+        if (door != null)
+        {
+            doorClosedPosition = door.position;
+            doorOpenPosition = doorClosedPosition + new Vector3(0f, doorOpenHeight, 0f);
+        }
     }
 
     void Update()
     {
-        // Floating effect
-        if (instructionUI.activeSelf)
+        if (triggerManager.instance != null && triggerManager.instance.isPlayerInRange)
         {
-            float newY = Mathf.Sin(Time.time * floatSpeed) * floatHeight;
-            instructionUI.transform.localPosition = startPos + new Vector3(0, newY, 0);
+            UpdateUIPosition();
+
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                Interact();
+            }
         }
 
-        // Input
-        if (isPlayerInRange && Input.GetKeyDown(KeyCode.E))
+        if (isDoorOpening && door != null)
         {
-            Interact();
-        }
-    }
+            door.position = Vector3.MoveTowards(
+                door.position,
+                doorOpenPosition,
+                doorOpenSpeed * Time.deltaTime
+            );
 
-    void Interact()
-    {
-        Debug.Log("Interact with lever");
-
-        // Ví dụ gọi lever
-        // lever.GetComponent<LeverScript>().Activate();
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            isPlayerInRange = true;
-            ShowUI();
+            if (door.position == doorOpenPosition)
+            {
+                isDoorOpening = false;
+            }
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    public void UpdateUIPosition()
     {
-        if (other.CompareTag("Player"))
+        if (target == null || instructionUI == null || cam == null)
         {
-            isPlayerInRange = false;
-            HideUI();
+            return;
         }
+
+        Vector3 worldPos = target.position + offset;
+        Vector3 screenPos = cam.WorldToScreenPoint(worldPos);
+
+        instructionUI.transform.position = screenPos;
     }
 
-    void ShowUI()
+    public void Interact() //animation lever
     {
-        instructionUI.SetActive(true);
-    }
+        if (hasInteracted)
+        {
+            return;
+        }
 
-    void HideUI()
-    {
-        instructionUI.SetActive(false);
+        if (leverHandle != null)
+        {
+            leverHandle.Rotate(90f, 0, 0);
+        }
+
+        if (door != null)
+        {
+            doorClosedPosition = door.position;
+            doorOpenPosition = doorClosedPosition + new Vector3(0f, doorOpenHeight, 0f);
+            isDoorOpening = true;
+        }
+
+        hasInteracted = true;
+
+        if (instructionUI != null)
+        {
+            instructionUI.SetActive(false);
+        }
     }
 }
