@@ -10204,7 +10204,7 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5582850148132278639, guid: 63f07ceed340e544282a42f40ad30797, type: 3}
-      insertIndex: 1
+      insertIndex: -1
       addedObject: {fileID: 378418171}
     - targetCorrespondingSourceObject: {fileID: 5582850148132278639, guid: 63f07ceed340e544282a42f40ad30797, type: 3}
       insertIndex: -1
@@ -11585,11 +11585,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::doorOpenScript
   leverHandle: {fileID: 845383362}
   door: {fileID: 378418166}
-  doorType: 3
+  doorType: 2
   openDirection: {x: 0, y: 1, z: 0}
   moveDistance: 3
-  rotationAxis: {x: 0, y: 1, z: 0}
-  rotationAngle: 90
   doorAnimator: {fileID: 378418171}
   openTriggerName: Open
   speed: 2
@@ -53699,8 +53697,6 @@ MonoBehaviour:
   doorType: 0
   openDirection: {x: 0, y: 1, z: 0}
   moveDistance: 3
-  rotationAxis: {x: 0, y: 1, z: 0}
-  rotationAngle: 90
   doorAnimator: {fileID: 0}
   openTriggerName: OpenDoor
   speed: 2
@@ -56405,8 +56401,6 @@ MonoBehaviour:
   doorType: 0
   openDirection: {x: 0, y: 1, z: 0}
   moveDistance: 3
-  rotationAxis: {x: 0, y: 1, z: 0}
-  rotationAngle: 90
   doorAnimator: {fileID: 378418171}
   openTriggerName: OpenDoor
   speed: 2

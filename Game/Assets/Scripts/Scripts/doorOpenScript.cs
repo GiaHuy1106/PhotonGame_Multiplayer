@@ -6,7 +6,8 @@ public class doorOpenScript : MonoBehaviour
     {
         Move,
         Slide,
-        Animation // 👉 thêm mới
+        Animation, // 👉 thêm mới
+        Rotate,
     }
 
     [Header("Lever")]
@@ -19,6 +20,12 @@ public class doorOpenScript : MonoBehaviour
     [Header("Move Settings")]
     public Vector3 openDirection = Vector3.up;
     public float moveDistance = 3f;
+
+    [Header("Rotate Settings")]
+    public Vector3 rotationAxis = Vector3.up;
+    public float rotationAngle = 90f;
+
+    [Header("")]
 
     [Header("Animation Settings")]
     public Animator doorAnimator;
@@ -78,6 +85,23 @@ public class doorOpenScript : MonoBehaviour
             if (Vector3.Distance(door.position, openPos) < 0.01f)
             {
                 door.position = openPos;
+                isOpening = false;
+            }
+        }
+
+        //Rotate
+        else if (doorType == DoorType.Rotate)
+        {
+            Quaternion targetRot = closedRot * Quaternion.Euler(rotationAxis * rotationAngle);
+            door.rotation = Quaternion.RotateTowards(
+                door.rotation,
+                targetRot,
+                speed * Time.deltaTime
+            );
+
+            if (Quaternion.Angle(door.rotation, targetRot) < 0.5f)
+            {
+                door.rotation = targetRot;
                 isOpening = false;
             }
         }
