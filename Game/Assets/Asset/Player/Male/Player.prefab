@@ -42,6 +42,7 @@ GameObject:
   - component: {fileID: 8508216390440520733}
   - component: {fileID: 7542623778773470815}
   - component: {fileID: 3190669985011356931}
+  - component: {fileID: 3157696050902695169}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -117,6 +118,19 @@ MonoBehaviour:
     m_Bits: 8
   cam: {fileID: 0}
   animator: {fileID: 6578150223019479274}
+--- !u!114 &3157696050902695169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7597920084025541373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb082609fa8a1ed498110096da6ac4f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
+  maxHealth: 100
 --- !u!1001 &2748188390933049052
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -144,6 +158,22 @@ PrefabInstance:
     - target: {fileID: 2173299953433721182, guid: 2dfbb63c9cdf7504faf4ff26b0581598, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 10.846889
+      objectReference: {fileID: 0}
+    - target: {fileID: 3679187510283323729, guid: 2dfbb63c9cdf7504faf4ff26b0581598, type: 3}
+      propertyPath: m_Size.x
+      value: 0.18861389
+      objectReference: {fileID: 0}
+    - target: {fileID: 3679187510283323729, guid: 2dfbb63c9cdf7504faf4ff26b0581598, type: 3}
+      propertyPath: m_Size.y
+      value: 1.0527264
+      objectReference: {fileID: 0}
+    - target: {fileID: 3679187510283323729, guid: 2dfbb63c9cdf7504faf4ff26b0581598, type: 3}
+      propertyPath: m_Center.x
+      value: -0.0037941327
+      objectReference: {fileID: 0}
+    - target: {fileID: 3679187510283323729, guid: 2dfbb63c9cdf7504faf4ff26b0581598, type: 3}
+      propertyPath: m_Center.z
+      value: -0.000000034760678
       objectReference: {fileID: 0}
     - target: {fileID: 4833088490931510165, guid: 2dfbb63c9cdf7504faf4ff26b0581598, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -195,7 +225,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8189980434977739222, guid: 2dfbb63c9cdf7504faf4ff26b0581598, type: 3}
       propertyPath: m_TagString
-      value: Player
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 8855052669661678444, guid: 2dfbb63c9cdf7504faf4ff26b0581598, type: 3}
       propertyPath: m_LocalPosition.x
