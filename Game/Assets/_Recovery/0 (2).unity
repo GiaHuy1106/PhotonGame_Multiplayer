@@ -11588,6 +11588,8 @@ MonoBehaviour:
   doorType: 2
   openDirection: {x: 0, y: 1, z: 0}
   moveDistance: 3
+  rotationAxis: {x: 0, y: 1, z: 0}
+  rotationAngle: 90
   doorAnimator: {fileID: 378418171}
   openTriggerName: Open
   speed: 2
@@ -53697,6 +53699,8 @@ MonoBehaviour:
   doorType: 0
   openDirection: {x: 0, y: 1, z: 0}
   moveDistance: 3
+  rotationAxis: {x: 0, y: 1, z: 0}
+  rotationAngle: 90
   doorAnimator: {fileID: 0}
   openTriggerName: OpenDoor
   speed: 2
@@ -56401,6 +56405,8 @@ MonoBehaviour:
   doorType: 0
   openDirection: {x: 0, y: 1, z: 0}
   moveDistance: 3
+  rotationAxis: {x: 0, y: 1, z: 0}
+  rotationAngle: 90
   doorAnimator: {fileID: 378418171}
   openTriggerName: OpenDoor
   speed: 2
