@@ -11,6 +11,13 @@ public class SwordDamage : MonoBehaviour
     {
         if (canDamage && other.CompareTag("Enemy"))
         {
+            BossDragonStats bossStats = other.GetComponent<BossDragonStats>();
+            if (bossStats != null)
+            {
+                bossStats.TakeDamage(damageAmount);
+                canDamage = false;
+                return; 
+            }
             EnemyAI enemy = other.GetComponent<EnemyAI>();
             if (enemy != null)
             {

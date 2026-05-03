@@ -18,7 +18,7 @@ public class BossDragonStats : MonoBehaviour
         aiScript = GetComponent<BossDragonAI>();
     }
     
-    public void TakeDamage()
+    public void TakeDamage(float damage)
     {
         if (aiScript != null && aiScript.currentState == BossDragonAI.BossState.Die) return;
 

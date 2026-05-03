@@ -142,7 +142,18 @@ public class BossDragonAI : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 2.5f);
         }
     }
-
+    public void TriggerMeleeDamage()
+    {
+        if (playerTarget != null && stats != null)
+        {
+            float dist = Vector3.Distance(transform.position, playerTarget.position);
+            if (dist <= meleeRange + 1f) 
+            {
+                PlayerHealth pHealth = playerTarget.GetComponent<PlayerHealth>();
+                if (pHealth != null) pHealth.TakeDamage(stats.damage);
+            }
+        }
+    }
     private void UpdateAnimations()
     {
         if (animator == null) return;
