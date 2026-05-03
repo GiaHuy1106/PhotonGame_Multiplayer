@@ -54905,6 +54905,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 252465904558530009, guid: 14eef0d96509437469aa5126d10920e0, type: 3}
+      propertyPath: burningVFXPrefab
+      value: 
+      objectReference: {fileID: 1000010823978654, guid: 3228a22491941734bb83ad691d17fcb9, type: 3}
     - target: {fileID: 2169243280838930756, guid: 14eef0d96509437469aa5126d10920e0, type: 3}
       propertyPath: healthUI
       value: 
@@ -54915,7 +54919,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7166780732799261940, guid: 14eef0d96509437469aa5126d10920e0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -9.74
+      value: -6.37
       objectReference: {fileID: 0}
     - target: {fileID: 7166780732799261940, guid: 14eef0d96509437469aa5126d10920e0, type: 3}
       propertyPath: m_LocalPosition.y
@@ -54923,7 +54927,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7166780732799261940, guid: 14eef0d96509437469aa5126d10920e0, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.55
+      value: -0.89
       objectReference: {fileID: 0}
     - target: {fileID: 7166780732799261940, guid: 14eef0d96509437469aa5126d10920e0, type: 3}
       propertyPath: m_LocalRotation.w

@@ -6,6 +6,10 @@ public class FireColumnDamage : MonoBehaviour
     public float damagePerTick = 10f;
     public float tickInterval = 1f;
 
+    [Header("Visual Effect Settings (Looks Only)")]
+    public GameObject burningVFXPrefab;
+    public float burnDuration = 4f;
+    public Vector3 vfxOffset = new Vector3(0, 0f, 0);
     private Dictionary<PlayerHealth, float> targetTimers = new Dictionary<PlayerHealth, float>();
 
     private void OnDisable()
@@ -31,14 +35,13 @@ public class FireColumnDamage : MonoBehaviour
             targetsToRemove.Add(target.Key);
         }
 
-        foreach (PlayerHealth p in targetsToRemove)
-        {
-            if (targetTimers.ContainsKey(p))
-            {
-                // targetTimers[p] = newTimer; // Cần viết lại logic để lưu newTimer chính xác hơn
-            }
+        //foreach (PlayerHealth p in targetsToRemove)
+        //{
+        //    if (targetTimers.ContainsKey(p))
+        //    {
+        //    }
 
-        }
+        //}
     }
 
     private void EfficientUpdate()
@@ -73,8 +76,22 @@ public class FireColumnDamage : MonoBehaviour
             if (player != null && !targetTimers.ContainsKey(player))
             {
                 targetTimers.Add(player, 0f);
-                player.TakeDamage(damagePerTick); 
+                player.TakeDamage(damagePerTick);
+                ApplyBurnVisual(other.gameObject);
             }
+        }
+    }
+    private void ApplyBurnVisual(GameObject target)
+    {
+        BurnEffectVisual existingBurn = target.GetComponent<BurnEffectVisual>();
+
+        if (existingBurn == null)
+        {
+            BurnEffectVisual newBurn = target.AddComponent<BurnEffectVisual>();
+            Animator anim = target.GetComponentInChildren<Animator>();
+            Transform spine = anim != null ? anim.GetBoneTransform(HumanBodyBones.Spine) : target.transform;
+
+            newBurn.Initialize(burnDuration, burningVFXPrefab, vfxOffset, spine);
         }
     }
     private void OnTriggerExit(Collider other)
