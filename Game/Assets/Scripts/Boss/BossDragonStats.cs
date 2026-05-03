@@ -11,12 +11,18 @@ public class BossDragonStats : MonoBehaviour
     private BossDragonAI aiScript;
     private bool hasTriggered66 = false;
     private bool hasTriggered33 = false;
-
+    public string bossName = "Ancient Dragon";
+    public BossHealthUI healthUI;
     private void Start()
     {
         currentHealth = maxHealth;
         animator = GetComponent<Animator>();
         aiScript = GetComponent<BossDragonAI>();
+
+        if (healthUI != null)
+        {
+            healthUI.SetupBoss(bossName, maxHealth);
+        }
     }
     
     public void TakeDamage(float damage)
@@ -24,6 +30,10 @@ public class BossDragonStats : MonoBehaviour
         if (aiScript != null && aiScript.currentState == BossDragonAI.BossState.Die) return;
 
         currentHealth -= damage;
+        if (healthUI != null)
+        {
+            healthUI.UpdateHealth(currentHealth);
+        }
         float healthPercentage = currentHealth / maxHealth;
         if (currentHealth <= 0f)
         {
@@ -62,6 +72,7 @@ public class BossDragonStats : MonoBehaviour
         if (aiScript != null) aiScript.TriggerDeath();
 
         if (animator != null) animator.SetTrigger("Die");
+        if (healthUI != null) healthUI.HideUI();
         Destroy(gameObject, 10f);
     }
 }

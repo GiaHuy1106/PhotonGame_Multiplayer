@@ -47,7 +47,12 @@ public class BossDragonAI : MonoBehaviour
         {
             case BossState.Idle:
                 agent.isStopped = true;
-                if (distanceToPlayer <= detectionRange) currentState = BossState.Chasing;
+                if (distanceToPlayer <= detectionRange)
+                {
+                    currentState = BossState.Chasing;
+                    if (stats != null && stats.healthUI != null)
+                        stats.healthUI.ShowUI();
+                }
                 break;
 
             case BossState.Chasing:
@@ -60,6 +65,7 @@ public class BossDragonAI : MonoBehaviour
                 }
                 else if (distanceToPlayer > detectionRange)
                 {
+                    stats.healthUI.HideUI();
                     currentState = BossState.Idle;
                 }
                 break;
