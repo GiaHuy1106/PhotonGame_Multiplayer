@@ -9,7 +9,8 @@ public class BossDragonStats : MonoBehaviour
     public float getHitDuration = 0.8f;
     private Animator animator;
     private BossDragonAI aiScript;
-
+    private bool hasTriggered66 = false;
+    private bool hasTriggered33 = false;
 
     private void Start()
     {
@@ -23,23 +24,39 @@ public class BossDragonStats : MonoBehaviour
         if (aiScript != null && aiScript.currentState == BossDragonAI.BossState.Die) return;
 
         currentHealth -= damage;
-
+        float healthPercentage = currentHealth / maxHealth;
         if (currentHealth <= 0f)
         {
             Die();
         }
         else
         {
-            if (animator != null)
+            if (healthPercentage <= 0.66f && !hasTriggered66)
             {
-                animator.ResetTrigger("MeleeAttack");
-                animator.ResetTrigger("FireAttack");
-                animator.SetTrigger("GetHit");
+                TriggerStagger();
+                hasTriggered66 = true;
+                Debug.Log("Boss còn 2/3 máu");
             }
-            if (aiScript != null) aiScript.TriggerGetHit(getHitDuration);
+            else if (healthPercentage <= 0.33f && !hasTriggered33)
+            {
+                TriggerStagger();
+                hasTriggered33 = true;
+                Debug.Log("Boss còn 1/3 máu");
+            }
         }
     }
+    private void TriggerStagger()
+    {
+        if (animator != null)
+        {
+            animator.ResetTrigger("MeleeAttack");
+            animator.ResetTrigger("FireAttack");
+            animator.SetTrigger("GetHit");
+        }
 
+        if (aiScript != null)
+            aiScript.TriggerGetHit(getHitDuration);
+    }
     private void Die()
     {
         if (aiScript != null) aiScript.TriggerDeath();
