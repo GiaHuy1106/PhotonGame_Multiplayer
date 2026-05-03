@@ -13,6 +13,7 @@ public class SessionListInfoItem : MonoBehaviour
     public event Action<SessionInfo> OnJoinSession;
     public void SetInformation(SessionInfo sessionInfo)
     {
+        
         this.sessionInfo = sessionInfo;
         sessionNameText.text = sessionInfo.Name;
         playerCountText.text = $"{sessionInfo.PlayerCount}/{sessionInfo.MaxPlayers}";

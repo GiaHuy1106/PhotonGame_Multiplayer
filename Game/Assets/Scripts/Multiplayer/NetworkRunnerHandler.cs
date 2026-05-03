@@ -1,71 +1,103 @@
-using System.Linq;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Fusion;
 using Fusion.Sockets;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class NetworkRunnerHandler : MonoBehaviour
 {
-    public NetworkRunner networkRunner;
+    public NetworkRunner networkRunnerPrefab;
     NetworkRunner _runner;
-    [SerializeField] Button joinLobby;
+    public static NetworkRunnerHandler Ins;
+    public string nickNamePlayer;
+    public event Action<List<SessionInfo>> OnListSessionUpdate;
+    public bool isJoinLobby { get; private set; } = false;
 
     private void Awake()
     {
-        _runner = Instantiate(networkRunner);
-        joinLobby.onClick.AddListener(() => JoinGame());
+        if(Ins != null && Ins != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Ins = this;
+        DontDestroyOnLoad(gameObject);
+        _runner = Instantiate(networkRunnerPrefab);
+        
     }
 
-    public void JoinGame()
+    
+    public async void JoinLobby(Action onJoinSuccess, Action onJoinFailed)
     {
-        _runner.JoinSessionLobby(SessionLobby.Shared);
 
-    }
 
-    public async Task StartGame()
-    {
-       if(_runner == null)
+        if (isJoinLobby)
         {
-            _runner = Instantiate(networkRunner);
-        }   
-        var task = await InitializeNetworkRunner(_runner, GameMode.Host, NetAddress.Any(), SceneManager.GetActiveScene(), (runner) =>
+            onJoinSuccess?.Invoke();
+            return;
+        }
+        if(_runner == null)
         {
-            Debug.Log("ConnectSuccess");
-        });
-        if(task.Ok)
+            _runner = Instantiate(networkRunnerPrefab);
+        }
+        var clientTask = await _runner.JoinSessionLobby(SessionLobby.Custom, "OurLobbyID");
+        if (clientTask.Ok)
         {
-            Debug.Log("Game Started");
+            isJoinLobby = true;
+            Debug.Log("JoinLobby successfull");
+            onJoinSuccess?.Invoke();
         }
         else
         {
-            Debug.Log("Failed to start game");
+            Debug.Log($"JoinLobby not successfull");
+            onJoinFailed?.Invoke();
         }
     }
-
-    protected virtual Task<StartGameResult> InitializeNetworkRunner(NetworkRunner runner, GameMode gameMode, NetAddress address, Scene scene, System.Action<NetworkRunner> initialized)
+    public void CreateSession(string nameRoom, Dictionary<string, SessionProperty> properties = null)
     {
-        var sceneManager = runner.GetComponents(typeof(MonoBehaviour)).OfType<INetworkSceneManager>().FirstOrDefault();
-        if (sceneManager == null)
+        
+    }
+
+    public void UpdateSession(List<SessionInfo> listSession)
+    {
+        OnListSessionUpdate?.Invoke(listSession);
+    }
+    INetworkSceneManager GetSceneManager(NetworkRunner runner)
+    {
+      var sceneManager = runner.GetComponent<INetworkSceneManager>();
+        if(sceneManager == null)
         {
-
-            sceneManager = runner.AddComponent<NetworkSceneManagerDefault>();
+           sceneManager = runner.AddComponent<NetworkSceneManagerDefault>();
         }
+        return sceneManager;
+    }
 
+    protected virtual Task<StartGameResult> InitializeNetworkRunner(NetworkRunner runner, GameMode gameMode,string sessionName, byte[] connectionToken, NetAddress address , Scene scene, System.Action<NetworkRunner> initialized = null)
+    {
+        var sceneManager = GetSceneManager(runner);
+        
         return runner.StartGame(
             new StartGameArgs()
             {
                 GameMode = gameMode,
                 Address = address,
                 Scene = SceneRef.FromIndex(scene.buildIndex),
-                SessionName = "TestRoom",
+                SessionName = sessionName,
                 SceneManager = sceneManager,
                 OnGameStarted = initialized,
-
+                ConnectionToken = connectionToken,
+                CustomLobbyName = "OurLobbyID",
+                
+                
             }
             );
     }
 
+    public void CleanUpOnNetworkRunnerShutdown()
+    {
+        _runner = null;
+    }
 }
