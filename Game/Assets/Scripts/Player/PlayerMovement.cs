@@ -32,6 +32,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Animator animator;
     private CharacterController controller;
 
+    [Header("Auto Aim Settings")]
+    public float autoAimRange = 10f;
+    public float rotationSpeed = 10f;
+    private Transform currentAimTarget;
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -70,6 +74,7 @@ public class PlayerMovement : MonoBehaviour
                 break;
 
             case PlayerState.Attacking:
+                SmoothAutoAim();
                 break;
         }
     }
@@ -122,6 +127,10 @@ public class PlayerMovement : MonoBehaviour
     {
         if (Input.GetButtonDown("Fire1") && isGrounded)
         {
+            GameObject closestEnemy = FindClosestEnemy();
+            if (closestEnemy != null) currentAimTarget = closestEnemy.transform;
+            else currentAimTarget = null;
+
             if (animator != null)
             {
                 animator.SetTrigger("Attack");
@@ -134,5 +143,38 @@ public class PlayerMovement : MonoBehaviour
     public void ResetAttack()
     {
         currentState = PlayerState.Locomotion;
+    }
+
+    private void SmoothAutoAim()
+    {
+        if (currentAimTarget != null)
+        {
+            Vector3 direction = (currentAimTarget.position - transform.position).normalized;
+            direction.y = 0; 
+
+            if (direction != Vector3.zero)
+            {
+                Quaternion lookRotation = Quaternion.LookRotation(direction);
+                transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationSpeed);
+            }
+        }
+    }
+    private GameObject FindClosestEnemy()
+    {
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        GameObject closest = null;
+        float distance = Mathf.Infinity;
+        Vector3 position = transform.position;
+
+        foreach (GameObject enemy in enemies)
+        {
+            float curDistance = Vector3.Distance(enemy.transform.position, position);
+            if (curDistance < distance && curDistance <= autoAimRange)
+            {
+                closest = enemy;
+                distance = curDistance;
+            }
+        }
+        return closest;
     }
 }
