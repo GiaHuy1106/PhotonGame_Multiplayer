@@ -1,7 +1,8 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Fusion;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SessionListUIHandler : MonoBehaviour
 {
@@ -9,9 +10,23 @@ public class SessionListUIHandler : MonoBehaviour
     public GameObject sessionItemListPrefab;
     public RectTransform contentLayoutGroup;
     List<SessionInfo> lastUpdateList = new();
+    [SerializeField] GameObject passwordInputPanel;
+    [SerializeField] TMP_InputField inputPasswordRoom;
+    Image image;
+    private void Awake()
+    {
+
+    }
+  
     private void Start()
     {
         NetworkRunnerHandler.Ins.OnListSessionUpdate += OnSessionListUpdate;
+        NetworkRunnerHandler.Ins.OnJoinSessionFailed += OnJoinSessionFailed;
+        passwordInputPanel.SetActive(false);
+    }
+
+    private void OnJoinSessionFailed(ShutdownReason obj)
+    {
     }
 
     void OnSessionListUpdate(List<SessionInfo> sessionListInfo) 
@@ -23,6 +38,13 @@ public class SessionListUIHandler : MonoBehaviour
             AddToList(item);
         }
     }
+    public void OnClickBackGroundPassword()
+    {
+        Debug.Log("Testclick");
+        passwordInputPanel.SetActive(false);
+        temp = null;
+    }
+
     public void ClearList()
     {
         foreach (Transform child in contentLayoutGroup.transform)
@@ -36,6 +58,7 @@ public class SessionListUIHandler : MonoBehaviour
         addedSessionInfoListItem.SetInformation(sessionInfo);
         addedSessionInfoListItem.OnJoinSession += OnJoinedSessionClick;
     }
+    SessionInfo temp;
 
     void OnJoinedSessionClick(SessionInfo sessionInfo)
     {
@@ -43,7 +66,7 @@ public class SessionListUIHandler : MonoBehaviour
         {
             statusText.text = "Invalid Room";
             return;
-        }
+        }                                                               
         if (!sessionInfo.IsOpen)
         {
             statusText.text = "Room is closed";
@@ -58,11 +81,37 @@ public class SessionListUIHandler : MonoBehaviour
         {
             if(value.Isbool && (bool)value)
             {
-
+                passwordInputPanel.SetActive(true);
+                inputPasswordRoom.text = null;
+                inputPasswordRoom.ActivateInputField();
+                temp = sessionInfo;
             }
+        }
+        else
+        {
+            NetworkRunnerHandler.Ins.JoinSession(sessionInfo.Name);
         }
 
     }
+
+     void OnEndEdit(string password)
+    {
+        passwordInputPanel.SetActive(false);
+        NetworkRunnerHandler.Ins.JoinSession(temp.Name, password, (value, shutdownReason) => {
+            if (value)
+            {
+                Debug.Log($"Join {temp.Name} success");
+            }
+            else
+            {
+                statusText.text = $"{shutdownReason}";
+                Debug.Log("JoinLobby has password Success");
+            }
+        });
+    }
+   
+
+
     public void OnNoSessionFound()
     {
         statusText.text = "No Game session found";
@@ -78,6 +127,7 @@ public class SessionListUIHandler : MonoBehaviour
     private void OnDestroy()
     {
         NetworkRunnerHandler.Ins.OnListSessionUpdate -= OnSessionListUpdate;
+        NetworkRunnerHandler.Ins.OnJoinSessionFailed -= OnJoinSessionFailed;
     }
     public void Refesh()
     {

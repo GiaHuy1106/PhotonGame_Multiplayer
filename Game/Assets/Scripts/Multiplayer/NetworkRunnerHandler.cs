@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 using Fusion;
 using Fusion.Sockets;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class NetworkRunnerHandler : MonoBehaviour
 {
@@ -14,8 +14,9 @@ public class NetworkRunnerHandler : MonoBehaviour
     public static NetworkRunnerHandler Ins;
     public string nickNamePlayer;
     public event Action<List<SessionInfo>> OnListSessionUpdate;
+    public event Action<ShutdownReason> OnJoinSessionFailed;
     public bool isJoinLobby { get; private set; } = false;
-
+    public string passwordRoom;
     private void Awake()
     {
         if(Ins != null && Ins != this)
@@ -58,7 +59,14 @@ public class NetworkRunnerHandler : MonoBehaviour
     }
     public async void CreateSession(string nameRoom, Dictionary<string, SessionProperty> properties = null, Action<bool> callbackProcess = null)
     {
-         var clientTask = await InitializeNetworkRunner(_runner, GameMode.Host, nameRoom,2, StartUp.token, NetAddress.Any(), 0, properties );
+        
+        ConnectToken token = new ConnectToken
+        {
+            ID = StartUp.IDtoken,
+            NickName = nickNamePlayer,
+            password = passwordRoom,
+        };
+         var clientTask = await InitializeNetworkRunner(_runner, GameMode.Host, nameRoom,  NetAddress.Any(), Encoding.UTF8.GetBytes(JsonUtility.ToJson(token)), 2, 0, properties );
         if (clientTask.Ok)
         {
             Debug.Log("CreateSession ok");
@@ -86,11 +94,33 @@ public class NetworkRunnerHandler : MonoBehaviour
         }
         return sceneManager;
     }
-
-    protected virtual Task<StartGameResult> InitializeNetworkRunner(NetworkRunner runner, GameMode gameMode,string sessionName,int playerCount, byte[] connectionToken, NetAddress address , int sceneIndex,Dictionary<string, SessionProperty> pros, System.Action<NetworkRunner> initialized = null)
+    public async void JoinSession(string name, string password = null, Action<bool, string> callbackProcess = null)
+    {
+        ConnectToken token = new ConnectToken { 
+            ID = StartUp.IDtoken,
+            password = password,
+            NickName = nickNamePlayer
+        };
+        byte[] connectToken = Encoding.UTF8.GetBytes(JsonUtility.ToJson(token));
+        var clientTask = await InitializeNetworkRunner(_runner, GameMode.Client, name, NetAddress.Any(), connectToken);
+        if (clientTask.Ok)
+        {
+            callbackProcess?.Invoke(true, "");
+            Debug.Log($"JoinSession: {name}");
+        }
+        else
+        {
+            Debug.Log($"Error while join session {name} - Reaason: {clientTask.ShutdownReason}");
+            callbackProcess?.Invoke(false, clientTask.ShutdownReason.ToString());
+        }
+    }
+    protected virtual Task<StartGameResult> InitializeNetworkRunner(NetworkRunner runner, GameMode gameMode,string sessionName,  NetAddress address, byte[] connectionToken, int playerCount = 2,  int sceneIndex = 0,Dictionary<string, SessionProperty> pros = null, System.Action<NetworkRunner> initialized = null)
     {
         var sceneManager = GetSceneManager(runner);
-        
+        if(runner == null)
+        {
+            runner = Instantiate(networkRunnerPrefab);
+        }
         return runner.StartGame(
             new StartGameArgs()
             {
@@ -103,13 +133,15 @@ public class NetworkRunnerHandler : MonoBehaviour
                 ConnectionToken = connectionToken,
                 CustomLobbyName = "OurLobbyID",
                 PlayerCount = playerCount,
-                
+                SessionProperties = pros,
             }
             );
     }
 
-    public void CleanUpOnNetworkRunnerShutdown()
+    public void JoinSessionFailed(ShutdownReason reason)
     {
-        _runner = null;
+        Debug.Log("JoinSessionFaild");
+        OnJoinSessionFailed?.Invoke(reason);
+        
     }
 }

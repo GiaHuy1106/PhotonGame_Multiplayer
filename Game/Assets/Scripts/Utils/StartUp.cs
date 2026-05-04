@@ -3,11 +3,13 @@ using UnityEngine;
 
 public static class StartUp 
 {
-    public static byte[] token;
+    public static string IDtoken;
     [RuntimeInitializeOnLoadMethod(loadType: RuntimeInitializeLoadType.BeforeSceneLoad)]
     public static void OnLoadMethod()
     {
-        token = TokenUtils.NewToken();
+        var token = TokenUtils.NewToken();
+        IDtoken = TokenUtils.TokenToString(token);
+        
     }
 
 }

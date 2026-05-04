@@ -27,12 +27,8 @@ public class CreateSession : MonoBehaviour
         if (hasPassword.isOn && !string.IsNullOrEmpty(password.text))
         {
             pros.Add("HasPassword", (SessionProperty)true);
-            pros.Add("Password", (SessionProperty)password.text);
-        }
-        else
-        {
-
-        }
+            NetworkRunnerHandler.Ins.passwordRoom = password.text;
+        }        
             NetworkRunnerHandler.Ins.CreateSession(roomName.text, pros, CallbackProcess);
     }
 

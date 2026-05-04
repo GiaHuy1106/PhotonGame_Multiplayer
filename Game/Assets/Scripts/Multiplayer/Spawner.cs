@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using Fusion;
 using Fusion.Sockets;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -18,6 +18,23 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token)
     {
+        string jsonToken = Encoding.UTF8.GetString(token);
+        ConnectToken tokenClient = JsonUtility.FromJson<ConnectToken>(jsonToken);
+        if (runner.SessionInfo.Properties.TryGetValue("HasPassword", out var hasPassword))
+        {
+            if(NetworkRunnerHandler.Ins.passwordRoom == tokenClient.password)
+            {
+                request.Accept();
+            }
+            else
+            {
+                request.Refuse();
+            }
+        }
+        else
+        {
+            request.Accept();
+        }
     }
 
     public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data)
@@ -82,8 +99,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
-        NetworkRunnerHandler.Ins.CleanUpOnNetworkRunnerShutdown();
-        SceneManager.LoadScene("SetupScene");
+        NetworkRunnerHandler.Ins.JoinSessionFailed(shutdownReason);
     }
 
     public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message)
