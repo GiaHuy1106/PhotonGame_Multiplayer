@@ -25,7 +25,6 @@ public class floatingText : MonoBehaviour
     {
         if (!other.CompareTag("Player") || floatingTextUI == null) return;
 
-        Debug.Log("Player entered the trigger zone for text: " + floatingTextUI.gameObject.name);
         isPlayerInside = true;
 
         if (floatingRoutine != null)
@@ -40,7 +39,6 @@ public class floatingText : MonoBehaviour
     {
         if (!other.CompareTag("Player") || floatingTextUI == null) return;
 
-        Debug.Log("Player exited the trigger zone for text: " + floatingTextUI.gameObject.name);
         isPlayerInside = false;
         floatingTextUI.gameObject.SetActive(false);
         floatingTextUI.transform.localPosition = initialLocalTextPosition;
