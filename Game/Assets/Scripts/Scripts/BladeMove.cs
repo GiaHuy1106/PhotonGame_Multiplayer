@@ -7,8 +7,8 @@ public class BladeMove : MonoBehaviour
     public float minX = -0.5f;
     public float maxX = 0.5f;
     public float moveTrapSpeed = 1f;
-
-    private int moveDirection = 1;
+    public GameObject pointA;
+    public GameObject pointB;
 
     void Update()
     {
@@ -18,20 +18,9 @@ public class BladeMove : MonoBehaviour
 
     public void moveTrap()
     {
-        float nextX = transform.position.x + moveDirection * moveTrapSpeed * Time.deltaTime;
+        if (pointA == null || pointB == null) return;
 
-        if (nextX >= maxX)
-        {
-            nextX = maxX;
-            moveDirection = -1;
-        }
-        else if (nextX <= minX)
-        {
-            nextX = minX;
-            moveDirection = 1;
-        }
-
-        transform.position = new Vector3(nextX, transform.position.y, transform.position.z);
+        transform.position = Vector3.Lerp(pointA.transform.position, pointB.transform.position, (Mathf.Sin(Time.time * moveTrapSpeed) + 1f) / 2f);
     }
 
     private void RotateBlade()
