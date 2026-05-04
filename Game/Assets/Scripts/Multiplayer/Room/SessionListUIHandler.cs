@@ -8,7 +8,7 @@ public class SessionListUIHandler : MonoBehaviour
     public TextMeshProUGUI statusText;
     public GameObject sessionItemListPrefab;
     public RectTransform contentLayoutGroup;
-    
+    List<SessionInfo> lastUpdateList = new();
     private void Start()
     {
         NetworkRunnerHandler.Ins.OnListSessionUpdate += OnSessionListUpdate;
@@ -16,6 +16,7 @@ public class SessionListUIHandler : MonoBehaviour
 
     void OnSessionListUpdate(List<SessionInfo> sessionListInfo) 
     {
+        lastUpdateList = sessionListInfo;
         ClearList();
         foreach (var item in sessionListInfo)
         {
@@ -58,5 +59,13 @@ public class SessionListUIHandler : MonoBehaviour
     private void OnDestroy()
     {
         NetworkRunnerHandler.Ins.OnListSessionUpdate -= OnSessionListUpdate;
+    }
+    public void Refesh()
+    {
+        Debug.Log("Refesh Button");
+        if (lastUpdateList != null && lastUpdateList.Count != 0)
+        {
+            OnSessionListUpdate(lastUpdateList);
+        }
     }
 }

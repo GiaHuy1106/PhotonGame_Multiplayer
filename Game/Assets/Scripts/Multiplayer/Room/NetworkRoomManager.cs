@@ -9,7 +9,7 @@ public class NetworkRoomManager : NetworkBehaviour, IPlayerJoined, IPlayerLeft
     [SerializeField] GameObject PlayerElementPrefab;
     public void PlayerJoined(PlayerRef player)
     {
-        
+
     }
 
     public void PlayerLeft(PlayerRef player)

@@ -30,13 +30,13 @@ public class NetworkRunnerHandler : MonoBehaviour
     }
 
     
-    public async void JoinLobby(Action onJoinSuccess, Action onJoinFailed)
+    public async void JoinLobby(Action<bool> OnProcess)
     {
 
 
         if (isJoinLobby)
         {
-            onJoinSuccess?.Invoke();
+            OnProcess?.Invoke(true);
             return;
         }
         if(_runner == null)
@@ -48,17 +48,29 @@ public class NetworkRunnerHandler : MonoBehaviour
         {
             isJoinLobby = true;
             Debug.Log("JoinLobby successfull");
-            onJoinSuccess?.Invoke();
+            OnProcess?.Invoke(true);
         }
         else
         {
             Debug.Log($"JoinLobby not successfull");
-            onJoinFailed?.Invoke();
+            OnProcess?.Invoke(false);
         }
     }
-    public void CreateSession(string nameRoom, Dictionary<string, SessionProperty> properties = null)
+    public async void CreateSession(string nameRoom, Dictionary<string, SessionProperty> properties = null, Action<bool> callbackProcess = null)
     {
+         var clientTask = await InitializeNetworkRunner(_runner, GameMode.Host, nameRoom, StartUp.token, NetAddress.Any(), SceneManager.GetSceneByName("RoomScene"), properties );
+        if (clientTask.Ok)
+        {
+            Debug.Log("CreateSession ok");
+            callbackProcess?.Invoke(true);
+        }
         
+        else
+        {
+            callbackProcess?.Invoke(false);
+            Debug.Log("Failded CreateSession");
+            Debug.Log(clientTask.ShutdownReason);
+        }
     }
 
     public void UpdateSession(List<SessionInfo> listSession)
@@ -75,7 +87,7 @@ public class NetworkRunnerHandler : MonoBehaviour
         return sceneManager;
     }
 
-    protected virtual Task<StartGameResult> InitializeNetworkRunner(NetworkRunner runner, GameMode gameMode,string sessionName, byte[] connectionToken, NetAddress address , Scene scene, System.Action<NetworkRunner> initialized = null)
+    protected virtual Task<StartGameResult> InitializeNetworkRunner(NetworkRunner runner, GameMode gameMode,string sessionName, byte[] connectionToken, NetAddress address , Scene scene,Dictionary<string, SessionProperty> pros, System.Action<NetworkRunner> initialized = null)
     {
         var sceneManager = GetSceneManager(runner);
         
