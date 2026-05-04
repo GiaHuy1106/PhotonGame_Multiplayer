@@ -33,7 +33,7 @@ public class CreateSession : MonoBehaviour
         {
 
         }
-            NetworkRunnerHandler.Ins.CreateSession("Empty", pros, CallbackProcess);
+            NetworkRunnerHandler.Ins.CreateSession(roomName.text, pros, CallbackProcess);
     }
 
     void CallbackProcess(bool oke)
