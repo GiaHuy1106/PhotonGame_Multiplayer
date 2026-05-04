@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 892f875859f6efc4291c96d1c790e9e5, type: 3}
+  m_Name: MissonData
+  m_EditorClassIdentifier: Assembly-CSharp::MissionData
+  missionName: Collect Gem
+  description: Collect Gem and Upgrade Weapon to kill final boss
+  requireMultiplayer: 1
+  requiredPlayerCount: 2
+  requirements:
+  - requiredItem: {fileID: 0}
+    fromMonster: {fileID: 0}
+    amount: 1
+  - requiredItem: {fileID: 0}
+    fromMonster: {fileID: 0}
+    amount: 1
