@@ -58,7 +58,7 @@ public class NetworkRunnerHandler : MonoBehaviour
     }
     public async void CreateSession(string nameRoom, Dictionary<string, SessionProperty> properties = null, Action<bool> callbackProcess = null)
     {
-         var clientTask = await InitializeNetworkRunner(_runner, GameMode.Host, nameRoom, StartUp.token, NetAddress.Any(), SceneManager.GetSceneByName("RoomScene"), properties );
+         var clientTask = await InitializeNetworkRunner(_runner, GameMode.Host, nameRoom,2, StartUp.token, NetAddress.Any(), 0, properties );
         if (clientTask.Ok)
         {
             Debug.Log("CreateSession ok");
@@ -87,7 +87,7 @@ public class NetworkRunnerHandler : MonoBehaviour
         return sceneManager;
     }
 
-    protected virtual Task<StartGameResult> InitializeNetworkRunner(NetworkRunner runner, GameMode gameMode,string sessionName, byte[] connectionToken, NetAddress address , Scene scene,Dictionary<string, SessionProperty> pros, System.Action<NetworkRunner> initialized = null)
+    protected virtual Task<StartGameResult> InitializeNetworkRunner(NetworkRunner runner, GameMode gameMode,string sessionName,int playerCount, byte[] connectionToken, NetAddress address , int sceneIndex,Dictionary<string, SessionProperty> pros, System.Action<NetworkRunner> initialized = null)
     {
         var sceneManager = GetSceneManager(runner);
         
@@ -96,13 +96,13 @@ public class NetworkRunnerHandler : MonoBehaviour
             {
                 GameMode = gameMode,
                 Address = address,
-                Scene = SceneRef.FromIndex(scene.buildIndex),
+                Scene = SceneRef.FromIndex(sceneIndex),
                 SessionName = sessionName,
                 SceneManager = sceneManager,
                 OnGameStarted = initialized,
                 ConnectionToken = connectionToken,
                 CustomLobbyName = "OurLobbyID",
-                
+                PlayerCount = playerCount,
                 
             }
             );

@@ -30,7 +30,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken)
     {
-        
+
     }
 
     public void OnInput(NetworkRunner runner, NetworkInput input)

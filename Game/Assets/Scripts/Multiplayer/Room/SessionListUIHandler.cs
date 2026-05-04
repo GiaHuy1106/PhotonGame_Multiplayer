@@ -34,15 +34,34 @@ public class SessionListUIHandler : MonoBehaviour
     {
         SessionListInfoItem addedSessionInfoListItem = Instantiate(sessionItemListPrefab, contentLayoutGroup.transform).GetComponent<SessionListInfoItem>();
         addedSessionInfoListItem.SetInformation(sessionInfo);
-        addedSessionInfoListItem.OnJoinSession += OnJoinedSession;
+        addedSessionInfoListItem.OnJoinSession += OnJoinedSessionClick;
     }
 
-    void OnJoinedSession(SessionInfo sessionInfo)
+    void OnJoinedSessionClick(SessionInfo sessionInfo)
     {
-        if (sessionInfo.IsOpen)
+        if (!sessionInfo.IsValid)
         {
-
+            statusText.text = "Invalid Room";
+            return;
         }
+        if (!sessionInfo.IsOpen)
+        {
+            statusText.text = "Room is closed";
+            return;
+        }
+        if(sessionInfo.PlayerCount >= sessionInfo.MaxPlayers)
+        {
+            statusText.text = $"Room is full";
+            return;
+        }
+        if (sessionInfo.Properties.TryGetValue("HasPassword", out var value))
+        {
+            if(value.Isbool && (bool)value)
+            {
+
+            }
+        }
+
     }
     public void OnNoSessionFound()
     {
