@@ -15,10 +15,10 @@ public class PlayerHealth : MonoBehaviour
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
-        Debug.Log("Player còn: " + currentHealth + " máu");
 
         if (animator != null) animator.SetTrigger("GetHit");
-
+        Debug.Log("Player cï¿½n: " + currentHealth + " mï¿½u");
+        
         if (currentHealth <= 0) Die();
     }
 
