@@ -5,6 +5,7 @@ public class missionManager : MonoBehaviour
 {
     public MissionData currentMission;
 
+
     private Dictionary<ItemData, int> teamProgress = new Dictionary<ItemData, int>();
 
     public void OnItemCollected(ItemData item)

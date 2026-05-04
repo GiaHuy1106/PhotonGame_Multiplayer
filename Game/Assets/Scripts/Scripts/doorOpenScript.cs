@@ -37,6 +37,8 @@ public class doorOpenScript : MonoBehaviour
     private bool hasInteracted = false;
     private bool isPlayerNear = false;
 
+    public bool HasInteracted => hasInteracted;
+
     private Vector3 closedPos;
     private Vector3 openPos;
 
