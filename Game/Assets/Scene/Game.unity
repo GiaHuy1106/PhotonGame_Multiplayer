@@ -1348,6 +1348,7 @@ GameObject:
   - component: {fileID: 47043818}
   - component: {fileID: 47043822}
   - component: {fileID: 47043821}
+  - component: {fileID: 47043823}
   - component: {fileID: 47043820}
   m_Layer: 0
   m_Name: CinemachineCamera
@@ -1548,6 +1549,36 @@ MonoBehaviour:
       Wait: 1
       Time: 2
     Restrictions: 0
+--- !u!114 &47043823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 47043815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca7de3aefa901374ba29464584a3109a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineDecollider
+  CameraRadius: 0.4
+  Decollision:
+    Enabled: 0
+    ObstacleLayers:
+      serializedVersion: 2
+      m_Bits: 1
+    UseFollowTarget:
+      Enabled: 0
+      YOffset: 0
+    Damping: 0.5
+    SmoothingTime: 0
+  TerrainResolution:
+    Enabled: 1
+    TerrainLayers:
+      serializedVersion: 2
+      m_Bits: 9
+    MaximumRaycast: 10
+    Damping: 0.5
 --- !u!1001 &50868523
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -54917,6 +54948,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Boss
       objectReference: {fileID: 0}
+    - target: {fileID: 4216656751468557269, guid: 14eef0d96509437469aa5126d10920e0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7166780732799261940, guid: 14eef0d96509437469aa5126d10920e0, type: 3}
       propertyPath: m_LocalPosition.x
       value: -6.37
@@ -55564,7 +55599,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 6.2005, y: -448}
+  m_AnchoredPosition: {x: 6.2004395, y: -448}
   m_SizeDelta: {x: -417.5095, y: -1021.6923}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &7693639657260027798

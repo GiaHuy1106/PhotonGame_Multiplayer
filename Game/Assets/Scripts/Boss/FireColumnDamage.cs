@@ -11,7 +11,7 @@ public class FireColumnDamage : MonoBehaviour
     public float burnDuration = 4f;
     public Vector3 vfxOffset = new Vector3(0, 0f, 0);
     private Dictionary<PlayerHealth, float> targetTimers = new Dictionary<PlayerHealth, float>();
-
+    private List<PlayerHealth> keysBuffer = new List<PlayerHealth>();
     private void OnDisable()
     {
         targetTimers.Clear();
@@ -34,29 +34,23 @@ public class FireColumnDamage : MonoBehaviour
             }
             targetsToRemove.Add(target.Key);
         }
-
-        //foreach (PlayerHealth p in targetsToRemove)
-        //{
-        //    if (targetTimers.ContainsKey(p))
-        //    {
-        //    }
-
-        //}
     }
 
     private void EfficientUpdate()
     {
-        List<PlayerHealth> playersInFire = new List<PlayerHealth>(targetTimers.Keys);
+        keysBuffer.Clear();
+        keysBuffer.AddRange(targetTimers.Keys); 
 
-        foreach (PlayerHealth player in playersInFire)
+        for (int i = 0; i < keysBuffer.Count; i++)
         {
-            if (player == null || player.maxHealth <= 0) 
-            {
-                targetTimers.Remove(player);
-                continue;
+            PlayerHealth player = keysBuffer[i];
+            if (player == null) 
+            { 
+                targetTimers.Remove(player); 
+                continue; 
             }
-            targetTimers[player] += Time.deltaTime;
 
+            targetTimers[player] += Time.deltaTime;
             if (targetTimers[player] >= tickInterval)
             {
                 player.TakeDamage(damagePerTick);
