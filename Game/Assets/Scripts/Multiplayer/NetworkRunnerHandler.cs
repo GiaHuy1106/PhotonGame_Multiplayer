@@ -66,7 +66,7 @@ public class NetworkRunnerHandler : MonoBehaviour
             NickName = nickNamePlayer,
             password = passwordRoom,
         };
-         var clientTask = await InitializeNetworkRunner(_runner, GameMode.Host, nameRoom,  NetAddress.Any(), Encoding.UTF8.GetBytes(JsonUtility.ToJson(token)), 2, 0, properties );
+         var clientTask = await InitializeNetworkRunner(_runner, GameMode.Host, nameRoom,  NetAddress.Any(), Encoding.UTF8.GetBytes(JsonUtility.ToJson(token)), 2, 1, properties );
         if (clientTask.Ok)
         {
             Debug.Log("CreateSession ok");

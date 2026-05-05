@@ -94,8 +94,9 @@ public class SessionListUIHandler : MonoBehaviour
 
     }
 
-     void OnEndEdit(string password)
+     public void OnEndEdit(string password)
     {
+        Debug.Log("OnEndEdit");
         passwordInputPanel.SetActive(false);
         NetworkRunnerHandler.Ins.JoinSession(temp.Name, password, (value, shutdownReason) => {
             if (value)
