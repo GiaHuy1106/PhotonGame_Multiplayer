@@ -660,8 +660,10 @@ GameObject:
   - component: {fileID: 1708376456}
   - component: {fileID: 1708376455}
   - component: {fileID: 1708376454}
+  - component: {fileID: 1708376458}
+  - component: {fileID: 1708376459}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: RoomManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -751,73 +753,42 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!1 &1735338161
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1735338162}
-  - component: {fileID: 1735338163}
-  - component: {fileID: 1735338164}
-  m_Layer: 0
-  m_Name: RoomManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1735338162
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1735338161}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1735338163
+--- !u!114 &1708376458
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1735338161}
+  m_GameObject: {fileID: 1708376453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
+  SortKey: 2120480850
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 1708376459}
+  ForceRemoteRenderTimeframe: 0
+--- !u!114 &1708376459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1708376453}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7e4327284bf26f344a7cfbde01a87208, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkRoomManager
   ready_play: {fileID: 184377754}
-  Leave: {fileID: 1682164967}
-  PlayerElementPrefab: {fileID: 6678979440899782805, guid: 5f05a4bae665fa147b792e78669666f2, type: 3}
---- !u!114 &1735338164
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1735338161}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
-  SortKey: 1855138037
-  ObjectInterest: 1
-  Flags: 262145
-  NestedObjects: []
-  NetworkedBehaviours:
-  - {fileID: 1735338163}
-  ForceRemoteRenderTimeframe: 0
+  leaveButton: {fileID: 1682164967}
+  parent: {fileID: 1148990646}
+  PlayerElementPrefab: {fileID: -8661410278380672414, guid: 5f05a4bae665fa147b792e78669666f2, type: 3}
+  NameRoomText: {fileID: 2002552513}
 --- !u!1 &1893176836
 GameObject:
   m_ObjectHideFlags: 0
@@ -1177,4 +1148,3 @@ SceneRoots:
   m_Roots:
   - {fileID: 1708376457}
   - {fileID: 224832643}
-  - {fileID: 1735338162}
