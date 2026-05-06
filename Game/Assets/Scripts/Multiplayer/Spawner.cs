@@ -7,9 +7,11 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
 {
-    
+    [SerializeField] PlayerElementRoomNetwork PlayerElementRoomNetworkPrefab;
+   
     public void OnConnectedToServer(NetworkRunner runner)
     {
+        Debug.Log("Connected to server");
     }
 
     public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
@@ -18,6 +20,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token)
     {
+        Debug.Log("OnClient Request");
         string jsonToken = Encoding.UTF8.GetString(token);
         ConnectToken tokenClient = JsonUtility.FromJson<ConnectToken>(jsonToken);
         if (runner.SessionInfo.Properties.TryGetValue("HasPassword", out var hasPassword))
@@ -43,6 +46,8 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason)
     {
+        Debug.Log("DisconnectFromServer: "+ runner.UserId + "\t" + reason);
+        NetworkRunnerHandler.Ins.LeaveRoomScene(reason);
     }
 
     public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken)
@@ -68,10 +73,17 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
+        Debug.Log($"One player join the room");
+        if (runner.IsServer)
+        {
+           var obj = FindAnyObjectByType<NetworkRoomManager>().SpawnElementPlayer(player);
+            runner.SetPlayerObject(player, obj);
+        }
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
+        Debug.Log($"Player {runner.UserId} left the room");
     }
 
     public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress)
@@ -92,14 +104,16 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
     }
 
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
-    {
-        NetworkRunnerHandler.Ins.UpdateSession(sessionList);
+    {        
+            NetworkRunnerHandler.Ins.UpdateSession(sessionList);
         Debug.Log("SesionListUPdate");
     }
 
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
+        NetworkRunnerHandler.Ins.OnShutdown();
         NetworkRunnerHandler.Ins.JoinSessionFailed(shutdownReason);
+        Debug.Log("OnShutdown: " + shutdownReason);
     }
 
     public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message)

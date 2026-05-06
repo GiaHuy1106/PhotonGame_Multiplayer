@@ -6,6 +6,7 @@ using Fusion;
 using Fusion.Sockets;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class NetworkRunnerHandler : MonoBehaviour
 {
@@ -27,23 +28,24 @@ public class NetworkRunnerHandler : MonoBehaviour
         Ins = this;
         DontDestroyOnLoad(gameObject);
         _runner = Instantiate(networkRunnerPrefab);
-        
+
     }
 
+    
     
     public async void JoinLobby(Action<bool> OnProcess)
     {
 
-
+        if (_runner == null)
+        {
+            _runner = Instantiate(networkRunnerPrefab);
+        }
         if (isJoinLobby)
         {
             OnProcess?.Invoke(true);
             return;
         }
-        if(_runner == null)
-        {
-            _runner = Instantiate(networkRunnerPrefab);
-        }
+      
         var clientTask = await _runner.JoinSessionLobby(SessionLobby.Custom, "OurLobbyID");
         if (clientTask.Ok)
         {
@@ -80,9 +82,18 @@ public class NetworkRunnerHandler : MonoBehaviour
             Debug.Log(clientTask.ShutdownReason);
         }
     }
-
+    List<SessionInfo> temp;
+    public SessionInfo LookingSession(string name)
+    {
+        if(temp != null)
+        {
+            return temp.Find(x => x.Name == name);
+        }
+        return null;
+    }
     public void UpdateSession(List<SessionInfo> listSession)
     {
+        temp = listSession;
         OnListSessionUpdate?.Invoke(listSession);
     }
     INetworkSceneManager GetSceneManager(NetworkRunner runner)
@@ -94,7 +105,7 @@ public class NetworkRunnerHandler : MonoBehaviour
         }
         return sceneManager;
     }
-    public async void JoinSession(string name, string password = null, Action<bool, string> callbackProcess = null)
+    public async void JoinSession(string name, string password = null, Action<bool, ShutdownReason> callbackProcess = null)
     {
         ConnectToken token = new ConnectToken { 
             ID = StartUp.IDtoken,
@@ -105,25 +116,27 @@ public class NetworkRunnerHandler : MonoBehaviour
         var clientTask = await InitializeNetworkRunner(_runner, GameMode.Client, name, NetAddress.Any(), connectToken);
         if (clientTask.Ok)
         {
-            callbackProcess?.Invoke(true, "");
+            callbackProcess?.Invoke(true, clientTask.ShutdownReason);
             Debug.Log($"JoinSession: {name}");
         }
         else
         {
             Debug.Log($"Error while join session {name} - Reaason: {clientTask.ShutdownReason}");
-            callbackProcess?.Invoke(false, clientTask.ShutdownReason.ToString());
+            callbackProcess?.Invoke(false, clientTask.ShutdownReason);
         }
     }
     protected virtual Task<StartGameResult> InitializeNetworkRunner(NetworkRunner runner, GameMode gameMode,string sessionName,  NetAddress address, byte[] connectionToken, int playerCount = 2,  int sceneIndex = 0,Dictionary<string, SessionProperty> pros = null, System.Action<NetworkRunner> initialized = null)
     {
-        var sceneManager = GetSceneManager(runner);
         if(runner == null)
         {
             runner = Instantiate(networkRunnerPrefab);
         }
+        var sceneManager = GetSceneManager(runner);
+        
         return runner.StartGame(
             new StartGameArgs()
             {
+                
                 GameMode = gameMode,
                 Address = address,
                 Scene = SceneRef.FromIndex(sceneIndex),
@@ -134,6 +147,7 @@ public class NetworkRunnerHandler : MonoBehaviour
                 CustomLobbyName = "OurLobbyID",
                 PlayerCount = playerCount,
                 SessionProperties = pros,
+                
             }
             );
     }
@@ -141,7 +155,28 @@ public class NetworkRunnerHandler : MonoBehaviour
     public void JoinSessionFailed(ShutdownReason reason)
     {
         Debug.Log("JoinSessionFaild");
+        isJoinLobby = false;
         OnJoinSessionFailed?.Invoke(reason);
         
+    }
+    public void RequestRefeshLobby(Action<List<SessionInfo>> callback)
+    {
+        callback?.Invoke(temp);
+    }
+    public void OnShutdown()
+    {
+        CleanUp();
+        SceneManager.LoadScene("SetupScene");
+        _runner = Instantiate(networkRunnerPrefab);
+    }
+    void CleanUp()
+    {
+        passwordRoom = null;
+        _runner = null;
+        temp = null;
+    }
+    public void LeaveRoomScene(NetDisconnectReason reason)
+    {
+
     }
 }

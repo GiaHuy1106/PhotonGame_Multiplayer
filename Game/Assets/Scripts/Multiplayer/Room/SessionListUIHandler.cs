@@ -9,10 +9,10 @@ public class SessionListUIHandler : MonoBehaviour
     public TextMeshProUGUI statusText;
     public GameObject sessionItemListPrefab;
     public RectTransform contentLayoutGroup;
-    List<SessionInfo> lastUpdateList = new();
     [SerializeField] GameObject passwordInputPanel;
     [SerializeField] TMP_InputField inputPasswordRoom;
-    Image image;
+    [SerializeField] TMP_InputField nameRoomLookup;
+    [SerializeField] GameObject Processing;
     private void Awake()
     {
 
@@ -27,11 +27,11 @@ public class SessionListUIHandler : MonoBehaviour
 
     private void OnJoinSessionFailed(ShutdownReason obj)
     {
+        Debug.Log("Join session failed" + obj);
     }
 
     void OnSessionListUpdate(List<SessionInfo> sessionListInfo) 
     {
-        lastUpdateList = sessionListInfo;
         ClearList();
         foreach (var item in sessionListInfo)
         {
@@ -62,19 +62,20 @@ public class SessionListUIHandler : MonoBehaviour
 
     void OnJoinedSessionClick(SessionInfo sessionInfo)
     {
+        Processing.SetActive(true);
         if (!sessionInfo.IsValid)
         {
-            statusText.text = "Invalid Room";
+            DisPlayText(5f, "Invalid Room", Color.red);
             return;
         }                                                               
         if (!sessionInfo.IsOpen)
         {
-            statusText.text = "Room is closed";
+            DisPlayText(5f, "Room is closed", Color.red);
             return;
         }
         if(sessionInfo.PlayerCount >= sessionInfo.MaxPlayers)
         {
-            statusText.text = $"Room is full";
+            DisPlayText(5f, "Room is full", Color.red);
             return;
         }
         if (sessionInfo.Properties.TryGetValue("HasPassword", out var value))
@@ -89,7 +90,7 @@ public class SessionListUIHandler : MonoBehaviour
         }
         else
         {
-            NetworkRunnerHandler.Ins.JoinSession(sessionInfo.Name);
+            NetworkRunnerHandler.Ins.JoinSession(sessionInfo.Name, callbackProcess: (value, shudown) => { if (!value) Processing.SetActive(false); });
         }
 
     }
@@ -105,8 +106,12 @@ public class SessionListUIHandler : MonoBehaviour
             }
             else
             {
-                statusText.text = $"{shutdownReason}";
-                Debug.Log("JoinLobby has password Success");
+                Processing.SetActive(false);
+                if (shutdownReason == ShutdownReason.ConnectionRefused)
+                    DisPlayText(5f, "!Wrong Password", Color.red);
+                else
+                    DisPlayText(5f, "Error connection", Color.red);
+                    Debug.Log("JoinLobby has password Success");
             }
         });
     }
@@ -121,9 +126,16 @@ public class SessionListUIHandler : MonoBehaviour
     }
     public void OnLookingForGameSession()
     {
-        statusText.text = "Looking up...";
-        statusText.color = Color.white;
-        statusText.gameObject.SetActive(true);
+        if (!string.IsNullOrEmpty(nameRoomLookup.text)){
+            SessionInfo result = NetworkRunnerHandler.Ins.LookingSession(nameRoomLookup.text);
+            if(result != null)
+            {
+                ClearList();
+                AddToList(result);
+            }
+        }
+        else
+            nameRoomLookup.ActivateInputField();
     }
     private void OnDestroy()
     {
@@ -132,10 +144,27 @@ public class SessionListUIHandler : MonoBehaviour
     }
     public void Refesh()
     {
-        Debug.Log("Refesh Button");
-        if (lastUpdateList != null && lastUpdateList.Count != 0)
+        Debug.Log("Refesh");
+        NetworkRunnerHandler.Ins.RequestRefeshLobby((sessionList) => 
         {
-            OnSessionListUpdate(lastUpdateList);
+            if(sessionList != null)
+            {
+                ClearList();
+                foreach (var item in sessionList)
+                {
+                    AddToList(item);
+                }
+            }
+        });
+    }
+    public void DisPlayText(float duration, string text, Color color)
+    {
+        if(statusText != null){
+        statusText.gameObject.SetActive(true);
+            statusText.text = text;
+            statusText.color = color;
+            Utils.DelayCall(duration, () => statusText.gameObject.SetActive(false));
         }
+
     }
 }
