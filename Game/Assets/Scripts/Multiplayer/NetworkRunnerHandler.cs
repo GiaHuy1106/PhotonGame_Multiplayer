@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Fusion;
+using Fusion.Photon.Realtime;
 using Fusion.Sockets;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -132,7 +133,9 @@ public class NetworkRunnerHandler : MonoBehaviour
             runner = Instantiate(networkRunnerPrefab);
         }
         var sceneManager = GetSceneManager(runner);
-        
+        var appsetting = new FusionAppSettings();
+        var clone = PhotonAppSettings.Global.AppSettings.CopyTo(appsetting);
+        appsetting.FixedRegion = "hk";
         return runner.StartGame(
             new StartGameArgs()
             {
@@ -147,7 +150,7 @@ public class NetworkRunnerHandler : MonoBehaviour
                 CustomLobbyName = "OurLobbyID",
                 PlayerCount = playerCount,
                 SessionProperties = pros,
-                
+                CustomPhotonAppSettings = appsetting
             }
             );
     }

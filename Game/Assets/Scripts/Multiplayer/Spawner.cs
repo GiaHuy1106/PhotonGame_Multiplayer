@@ -73,17 +73,13 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        Debug.Log($"One player join the room");
-        if (runner.IsServer)
-        {
-           var obj = FindAnyObjectByType<NetworkRoomManager>().SpawnElementPlayer(player);
-            runner.SetPlayerObject(player, obj);
-        }
+        Debug.Log("OnPlayerJoind callback from spawner");
+     
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
-        Debug.Log($"Player {runner.UserId} left the room");
+        Debug.Log("Playerleft callback from spawner");
     }
 
     public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress)
@@ -118,6 +114,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message)
     {
+
     }
     
 }

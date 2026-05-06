@@ -786,7 +786,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NetworkRoomManager
   ready_play: {fileID: 184377754}
   leaveButton: {fileID: 1682164967}
-  parent: {fileID: 1148990646}
+  groupPlayer: {fileID: 1148990646}
   PlayerElementPrefab: {fileID: -8661410278380672414, guid: 5f05a4bae665fa147b792e78669666f2, type: 3}
   NameRoomText: {fileID: 2002552513}
 --- !u!1 &1893176836

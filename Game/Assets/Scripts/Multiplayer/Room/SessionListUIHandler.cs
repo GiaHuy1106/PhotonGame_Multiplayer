@@ -12,11 +12,7 @@ public class SessionListUIHandler : MonoBehaviour
     [SerializeField] GameObject passwordInputPanel;
     [SerializeField] TMP_InputField inputPasswordRoom;
     [SerializeField] TMP_InputField nameRoomLookup;
-    [SerializeField] GameObject Processing;
-    private void Awake()
-    {
-
-    }
+    [SerializeField] GameObject Processing; 
   
     private void Start()
     {
@@ -82,6 +78,7 @@ public class SessionListUIHandler : MonoBehaviour
         {
             if(value.Isbool && (bool)value)
             {
+                Processing.SetActive(false);
                 passwordInputPanel.SetActive(true);
                 inputPasswordRoom.text = null;
                 inputPasswordRoom.ActivateInputField();
@@ -97,6 +94,7 @@ public class SessionListUIHandler : MonoBehaviour
 
      public void OnEndEdit(string password)
     {
+        Processing.SetActive(true);
         Debug.Log("OnEndEdit");
         passwordInputPanel.SetActive(false);
         NetworkRunnerHandler.Ins.JoinSession(temp.Name, password, (value, shutdownReason) => {
