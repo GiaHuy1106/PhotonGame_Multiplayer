@@ -20,10 +20,7 @@ public class Inventory : MonoBehaviour
 
     void Start()
     {
-        // For testing: Add some items to the inventory at start
-        AddItem(redPotion, 5);
-        AddItem(bluePotion, 3);
-        AddItem(greenPotion, 2);
+
     }
 
     // Update is called once per frame
