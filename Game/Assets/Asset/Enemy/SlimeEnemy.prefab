@@ -436,7 +436,7 @@ GameObject:
   - component: {fileID: 5920750011682375602}
   - component: {fileID: 2938478849133384033}
   m_Layer: 0
-  m_Name: SlimePBR
+  m_Name: SlimeEnemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

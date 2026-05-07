@@ -10,8 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e4aa86084663ebc418cea45501736d37, type: 3}
-  m_Name: MonsterData
+  m_Name: PurpleDragon
   m_EditorClassIdentifier: Assembly-CSharp::MonsterData
-  monsterID: 
-  monsterName: 
-  dropTable: {fileID: 0}
+  prefab: {fileID: 174418, guid: 36c38a65d57de7d4a9a582f9ee857701, type: 3}
+  dropTable: {fileID: 11400000, guid: f0738541b4742d74c928f0f42d3c76ab, type: 2}
