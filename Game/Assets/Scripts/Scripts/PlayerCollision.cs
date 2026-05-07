@@ -2,37 +2,28 @@ using UnityEngine;
 
 public class PlayerCollision : MonoBehaviour
 {
+    public PlayerMovement playerMovement;
     public PlayerHealth playerHealth;
-    public CharacterController controller;
 
-    public float knockbackForce = 8f;
-    public float knockbackDuration = 0.2f;
-
-    private Vector3 knockbackVelocity;
-    private float knockbackTimer;
-
-    void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        if (hit.gameObject.CompareTag("Axe") || hit.gameObject.CompareTag("Blade"))
-        {
-            playerHealth.TakeDamage(15);
-
-            // 👉 Tính hướng văng
-            Vector3 direction = transform.position - hit.transform.position;
-            direction.y = 0; // tránh bị hất lên trời
-            direction.Normalize();
-
-            knockbackVelocity = direction * knockbackForce;
-            knockbackTimer = knockbackDuration;
-        }
-    }
+    private float hitCooldown = 0.3f; // ✅ NOTE: thêm cooldown
+    private float hitTimer = 0f;
 
     void Update()
     {
-        if (knockbackTimer > 0)
+        if (hitTimer > 0) hitTimer -= Time.deltaTime; // ✅ NOTE
+    }
+
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (hitTimer > 0) return; // ✅ NOTE: chặn spam
+
+        if(hit.gameObject.CompareTag("Axe") || hit.gameObject.CompareTag("Blade"))
         {
-            controller.Move(knockbackVelocity * Time.deltaTime);
-            knockbackTimer -= Time.deltaTime;
+            playerHealth.TakeDamage(15);
+
+            playerMovement.ApplyKnockback(hit.transform.position);
+
+            hitTimer = hitCooldown; // ✅ NOTE: reset cooldown
         }
     }
 }
