@@ -10,6 +10,7 @@ public class ItemData : ScriptableObject
     public Sprite itemIcon;
     public string itemDescription;
     public GameObject ItemPrefab;
+    public int maxStackSize;
 
     [Header("Pill Info")]
     public PotionType potionType;

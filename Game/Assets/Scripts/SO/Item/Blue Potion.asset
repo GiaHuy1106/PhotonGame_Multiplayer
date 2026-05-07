@@ -17,4 +17,5 @@ MonoBehaviour:
   itemIcon: {fileID: 21300000, guid: 74f3ff7910cd94f41af53cfb1413fa03, type: 3}
   itemDescription: Speed Boost
   ItemPrefab: {fileID: 8398601021662225049, guid: 67ebebe313b325b49a8c33c825bdabe5, type: 3}
-  potionType: 0
+  maxStackSize: 99
+  potionType: 1

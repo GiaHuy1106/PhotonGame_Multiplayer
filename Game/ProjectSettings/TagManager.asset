@@ -7,6 +7,9 @@ TagManager:
   - Enemy
   - Blade
   - Axe
+  - redPotion
+  - bluePotion
+  - greenPotion
   layers:
   - Default
   - TransparentFX

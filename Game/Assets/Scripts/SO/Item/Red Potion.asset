@@ -17,4 +17,5 @@ MonoBehaviour:
   itemIcon: {fileID: 21300000, guid: 9e4fbebb6cde952428e19243aeb3289f, type: 3}
   itemDescription: BloodUpdate
   ItemPrefab: {fileID: 7215856734752065869, guid: 1242a88922ac6d34da67517f4c97626b, type: 3}
+  maxStackSize: 99
   potionType: 0
