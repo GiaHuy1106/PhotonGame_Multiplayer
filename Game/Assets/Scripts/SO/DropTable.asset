@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: DropTable
   m_EditorClassIdentifier: Assembly-CSharp::DropTable
   drops:
-  - item: {fileID: 11400000, guid: 1602add5ed48cf645b0283c595ee07ab, type: 2}
-    dropChance: 33
   - item: {fileID: 11400000, guid: 1bb1b127779214a4c9f4593889af10ad, type: 2}
-    dropChance: 33
+    dropChance: 35
+  - item: {fileID: 11400000, guid: 1602add5ed48cf645b0283c595ee07ab, type: 2}
+    dropChance: 20
   - item: {fileID: 11400000, guid: 819fc8f8a77332240a1b9992d4ff9a80, type: 2}
-    dropChance: 34
+    dropChance: 45

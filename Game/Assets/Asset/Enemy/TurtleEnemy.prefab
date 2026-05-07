@@ -526,6 +526,7 @@ GameObject:
   - component: {fileID: 1139331841368143344}
   - component: {fileID: 8029822085060225533}
   - component: {fileID: 1145739063696058914}
+  - component: {fileID: 4519525257250439721}
   m_Layer: 0
   m_Name: TurtleEnemy
   m_TagString: Enemy
@@ -672,6 +673,22 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &4519525257250439721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1524411113276028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44209dd227293924988ace126b0f2c67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyLootDrop
+  monsterData: {fileID: 11400000, guid: 845e4420c0317794a9c111baa12b4c18, type: 2}
+  dropHeightOffset: 0.2
+  scatterRadius: 2
+  bounceForce: 7
 --- !u!1 &1532652994627396
 GameObject:
   m_ObjectHideFlags: 0

@@ -28,7 +28,7 @@ public class InventoryManager : MonoBehaviour
         shownPosition = inventoryRect.anchoredPosition;
         hiddenPosition = shownPosition + hiddenOffset;
         inventoryRect.anchoredPosition = hiddenPosition;
-        inventoryUI.SetActive(false);
+        inventoryUI.SetActive(true);
     }
 
     private void Update()

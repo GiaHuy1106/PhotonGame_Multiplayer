@@ -435,6 +435,7 @@ GameObject:
   - component: {fileID: 9096206131703916322}
   - component: {fileID: 5920750011682375602}
   - component: {fileID: 2938478849133384033}
+  - component: {fileID: 9133629470876099666}
   m_Layer: 0
   m_Name: SlimeEnemy
   m_TagString: Enemy
@@ -581,3 +582,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &9133629470876099666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1931298151966786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44209dd227293924988ace126b0f2c67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyLootDrop
+  monsterData: {fileID: 11400000, guid: 1957721b043edce4ca54b94e864fc6d6, type: 2}
+  dropHeightOffset: 0.2
+  scatterRadius: 2
+  bounceForce: 7
