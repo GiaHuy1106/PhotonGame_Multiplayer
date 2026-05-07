@@ -18,21 +18,18 @@ public class Inventory : MonoBehaviour
         allSlots.AddRange(inventorySlots);
     }
 
+    void Start()
+    {
+        // For testing: Add some items to the inventory at start
+        AddItem(redPotion, 5);
+        AddItem(bluePotion, 3);
+        AddItem(greenPotion, 2);
+    }
+
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            AddItem(redPotion, 5);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            AddItem(bluePotion, 3);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            AddItem(greenPotion, 2);
-        }
+
     }
 
     public void AddItem(ItemData itemtoAdd, int amount)

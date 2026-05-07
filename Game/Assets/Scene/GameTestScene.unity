@@ -1649,6 +1649,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemUse
   itemData: {fileID: 0}
+  inventory: {fileID: 1581425781}
   redPotionTest: {fileID: 11400000, guid: 819fc8f8a77332240a1b9992d4ff9a80, type: 2}
   bluePotionTest: {fileID: 11400000, guid: 1602add5ed48cf645b0283c595ee07ab, type: 2}
   greenPotionTest: {fileID: 11400000, guid: 1bb1b127779214a4c9f4593889af10ad, type: 2}

@@ -4,6 +4,7 @@ using System.Collections;
 public class ItemUse : MonoBehaviour
 {
     [SerializeField] private ItemData itemData;
+    public Inventory inventory;
 
     [Header("Test Items")]
     [SerializeField] private ItemData redPotionTest;
@@ -22,23 +23,48 @@ public class ItemUse : MonoBehaviour
 
     private void Update()
     {
-        // if (Input.GetKeyDown(KeyCode.Alpha1))
-        // {
-        //     Debug.Log("Test ItemUse: Pressed 1 - using Red Potion.");
-        //     UseItem(redPotionTest);
-        // }
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            checkInventoryForItem(redPotionTest);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            checkInventoryForItem(bluePotionTest);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            checkInventoryForItem(greenPotionTest);
+        }
+    }
 
-        // if (Input.GetKeyDown(KeyCode.Alpha2))
-        // {
-        //     Debug.Log("Test ItemUse: Pressed 2 - using Blue Potion.");
-        //     UseItem(bluePotionTest);
-        // }
+    public void checkInventoryForItem(ItemData item)
+    {
+        if (item == null)
+        {
+            Debug.LogWarning("ItemUse: checkInventoryForItem called with null item.");
+            return;
+        }
 
-        // if (Input.GetKeyDown(KeyCode.Alpha3))
-        // {
-        //     Debug.Log("Test ItemUse: Pressed 3 - using Green Potion.");
-        //     UseItem(greenPotionTest);
-        // }
+        Debug.Log("ItemUse: Checking inventory for " + item.itemName + ".");
+
+        if (inventory == null)
+        {
+            Debug.LogWarning("ItemUse: Inventory not found in scene.");
+            return;
+        }
+
+        foreach (Slot slot in inventory.GetComponentsInChildren<Slot>())
+        {
+            if (slot.GetItem() == item && slot.GetItemCount() > 0)
+            {
+                Debug.Log("ItemUse: Found " + slot.GetItemCount() + " of " + item.itemName + " in inventory. Using one.");
+                slot.setItem(item, slot.GetItemCount() - 1);
+                UseItem(item);
+                return;
+            }
+        }
+
+        Debug.Log("ItemUse: " + item.itemName + " not found in inventory.");
     }
 
     public void UseAssignedItem()
@@ -73,10 +99,6 @@ public class ItemUse : MonoBehaviour
 
             case PotionType.Green:
                 ApplyGreenPotion(targetPlayer);
-                break;
-
-            case PotionType.Yellow:
-                Debug.LogWarning("ItemUse: Yellow potion effect is not configured yet.");
                 break;
         }
     }
