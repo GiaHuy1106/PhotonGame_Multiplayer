@@ -10,4 +10,6 @@ public struct NetworkInputData : INetworkInput
     public bool isAttack;
     public bool isLeftShift;
     public bool isDefend;
+   
+
 }

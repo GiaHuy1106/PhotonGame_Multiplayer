@@ -1,16 +1,71 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerContext : MonoBehaviour
+public class PlayerContext
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+
+    public PlayerContext() { }
+    public PlayerContext(StateMachine machine)
     {
-        
+        this.locomotionMachine = machine;
+    }
+    public PlayerContext SetController(Fusion.NetworkCharacterController controller)
+    {
+        this.controller = controller;
+        return this;
+    }
+    public PlayerContext SetAnimController(PlayerAnimatorController anim)
+    {
+        this.anim = anim;
+        return this;
+    }
+    public PlayerContext SetMovementStateMachine(StateMachine machine)
+    {
+        this.locomotionMachine = machine;
+        return this;
     }
 
-    // Update is called once per frame
-    void Update()
+    public PlayerContext SetCombatStateMachine(StateMachine machine)
     {
-        
+        this.combatMachine = machine;
+        return this;
     }
+    public PlayerContext AddState(string key, IState value)
+    {
+        playerStates.Add(key, value);
+        return this;
+    }
+
+    public PlayerContext SetHPHandler(HPHandler health)
+    {
+        this.health = health;
+        return this;
+    }
+    public void SetInput(NetworkInputData inputData)
+    {
+        this.inputData = inputData;
+    }
+
+    public IState GetState(string key)
+    {
+
+        return playerStates[key];
+    }
+    public void ChangeMovementState(string state)
+    {
+        locomotionMachine.ChangeState(GetState(state));
+    }
+    public void ChangeCombatState(string state)
+    {
+        combatMachine.ChangeState(GetState(state));
+    }
+    public PlayerAnimatorController anim;
+    public Fusion.NetworkCharacterController controller;
+    public HPHandler health;
+    public NetworkInputData inputData;
+    public StateMachine locomotionMachine;
+    public StateMachine combatMachine;
+    public Dictionary<string, IState> playerStates = new();
+
 }

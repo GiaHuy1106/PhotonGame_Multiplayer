@@ -4,6 +4,7 @@ using System.Text;
 using Fusion;
 using Fusion.Sockets;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -101,7 +102,14 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnSceneLoadDone(NetworkRunner runner)
     {
-
+        Debug.Log("OnSceneLoadDone called");
+        Utils.DelayCall(1f, () => {
+            if(SceneManager.GetActiveScene().buildIndex == 3)
+            {
+                FindAnyObjectByType<GameManager>().SpawnPlayer(runner.LocalPlayer);
+            }
+        });
+       
     }
 
     public void OnSceneLoadStart(NetworkRunner runner)

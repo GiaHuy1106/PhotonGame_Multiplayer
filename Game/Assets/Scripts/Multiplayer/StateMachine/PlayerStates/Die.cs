@@ -1,16 +1,23 @@
 using UnityEngine;
 
-public class Die : MonoBehaviour
+public class Die : IState
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    PlayerContext ctx;
+    public Die(PlayerContext ctx)
     {
-        
+        this.ctx = ctx;
+    }
+    public void Enter()
+    {
+        Debug.Log("Enter Die");
+        ctx.anim.PlayClip(PlayerAnimatorController.DIE_HASH);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Execute(float tick)
     {
-        
+    }
+
+    public void Exit()
+    {
     }
 }

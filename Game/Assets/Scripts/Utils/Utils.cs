@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using UnityEngine;
 
 public static class Utils 
 {
@@ -12,5 +13,9 @@ public static class Utils
     {
         await Task.Yield();
         action?.Invoke();
+    }
+    public static Vector3 GetRandomPosition()
+    {
+        return new Vector3(UnityEngine.Random.Range(-10f, 10f), 1, UnityEngine.Random.Range(-10f, 10f));
     }
 }

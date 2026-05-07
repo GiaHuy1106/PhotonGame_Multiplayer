@@ -1,16 +1,23 @@
 using UnityEngine;
 
-public class NoneState : MonoBehaviour
+public class NoneState : IState
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    PlayerContext ctx;
+    public NoneState(PlayerContext ctx)
     {
-        
+        this.ctx = ctx;
+    }
+    public void Enter()
+    {
+        Debug.Log("Enter NoneState");
+        ctx.anim.PlayClip(PlayerAnimatorController.NONE_HASH, 1);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Execute(float tick)
     {
-        
+    }
+
+    public void Exit()
+    {
     }
 }

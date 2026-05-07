@@ -1,16 +1,27 @@
 using UnityEngine;
 
-public class JumpStart : MonoBehaviour
+public class JumpStart : IState
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    PlayerContext ctx;
+    public JumpStart(PlayerContext ctx)
     {
-        
+        this.ctx = ctx;
+    }
+    public void Enter()
+    {
+        Debug.Log("Enter JumpStart");
+        ctx.anim.PlayClip(PlayerAnimatorController.JUMPSTART_HASH);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Execute(float tick)
     {
-        
+        if(ctx.controller.Velocity.y < 0 && !ctx.controller.Grounded)
+        {
+            ctx.ChangeMovementState(nameof(Fall));
+        }
+    }
+
+    public void Exit()
+    {
     }
 }

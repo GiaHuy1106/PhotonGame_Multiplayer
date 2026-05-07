@@ -13,6 +13,7 @@ public class NetworkRunnerHandler : MonoBehaviour
 {
     public NetworkRunner networkRunnerPrefab;
     NetworkRunner _runner;
+    public NetworkRunner Runner => _runner;
     public static NetworkRunnerHandler Ins;
     public string nickNamePlayer;
     public event Action<List<SessionInfo>> OnListSessionUpdate;

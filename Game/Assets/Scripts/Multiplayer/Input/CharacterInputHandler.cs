@@ -28,7 +28,7 @@ public class CharacterInputHandler : MonoBehaviour
         pitchYaw = Input.mousePosition;
     }
     public NetworkInputData GetInputData() {
-        inputData.direction = direction;
+        inputData.direction = direction.normalized;
         inputData.rotationCamera = rotationCamera;
         inputData.pitchYaw = pitchYaw;
         inputData.isAttack = isAttack;

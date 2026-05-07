@@ -14,11 +14,11 @@ public class StateMachine
         }
 
     }
-    public void Update()
+    public void Update(float tick)
     {
         if (current != null)
         {
-            current.Execute();
+            current.Execute(tick);
         }
     }
 }
