@@ -9,6 +9,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
 {
     [SerializeField] PlayerElementRoomNetwork PlayerElementRoomNetworkPrefab;
    
+    CharacterInputHandler characterInputHandler;
     public void OnConnectedToServer(NetworkRunner runner)
     {
         Debug.Log("Connected to server");
@@ -57,6 +58,14 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
+       if(characterInputHandler == null && NetworkPlayer.Local != null)
+        {
+            characterInputHandler = NetworkPlayer.Local.GetComponent<CharacterInputHandler>();
+        }
+        if (characterInputHandler != null)
+        {
+            input.Set(characterInputHandler.GetInputData());
+        }
     }
 
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input)
