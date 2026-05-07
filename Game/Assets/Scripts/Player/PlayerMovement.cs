@@ -36,6 +36,13 @@ public class PlayerMovement : MonoBehaviour
     public float autoAimRange = 10f;
     public float rotationSpeed = 10f;
     private Transform currentAimTarget;
+
+    [Header("Knockback")]
+    public float knockbackForce = 8f;
+    public float knockbackDuration = 0.2f;
+
+    private Vector3 knockbackVelocity;
+    private float knockbackTimer;
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -49,24 +56,29 @@ public class PlayerMovement : MonoBehaviour
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
         if (animator != null) animator.SetBool("IsGrounded", isGrounded);
-        ApplyGravity();
 
         if (jumpTimer > 0) jumpTimer -= Time.deltaTime;
+
         if (!isGrounded && currentState == PlayerState.Locomotion)
         {
             currentState = PlayerState.Jumping;
             if (animator != null) animator.Play("Jump_Air", 0, 0f);
         }
+
+        Vector3 finalMove = Vector3.zero; // ✅ NOTE: gom toàn bộ movement vào đây
+
+        ApplyGravity(ref finalMove); // ✅ NOTE: truyền ref thay vì Move riêng
+
         switch (currentState)
         {
             case PlayerState.Locomotion:
-                HandleMovement();
+                HandleMovement(ref finalMove); // ✅ NOTE
                 HandleJumpInput();
                 HandleAttackInput();
                 break;
 
             case PlayerState.Jumping:
-                HandleMovement();
+                HandleMovement(ref finalMove); // ✅ NOTE
                 if (isGrounded && velocity.y < 0)
                 {
                     currentState = PlayerState.Locomotion;
@@ -77,9 +89,18 @@ public class PlayerMovement : MonoBehaviour
                 SmoothAutoAim();
                 break;
         }
+
+        // 👉 APPLY knockback cuối cùng
+        if (knockbackTimer > 0)
+        {
+            finalMove += knockbackVelocity;
+            knockbackTimer -= Time.deltaTime;
+        }
+
+        controller.Move(finalMove * Time.deltaTime); // ✅ NOTE: chỉ Move 1 lần duy nhất
     }
 
-    private void HandleMovement()
+    private void HandleMovement(ref Vector3 move) // ✅ NOTE: thêm ref
     {
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
@@ -101,9 +122,10 @@ public class PlayerMovement : MonoBehaviour
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
             Vector3 moveDir = Quaternion.Euler(0f, angle, 0f) * Vector3.forward;
-            controller.Move(moveDir.normalized * currentSpeed * Time.deltaTime);
+            move += moveDir.normalized * currentSpeed; // ✅ NOTE: không Move nữa
         }
     }
+    
 
     private void HandleJumpInput()
     {
@@ -116,11 +138,17 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void ApplyGravity()
+    private void ApplyGravity(ref Vector3 move)
     {
+        // if (isGrounded && velocity.y < 0) velocity.y = -2f;
+        // velocity.y += gravity * Time.deltaTime;
+        // controller.Move(velocity * Time.deltaTime);
+
         if (isGrounded && velocity.y < 0) velocity.y = -2f;
+
         velocity.y += gravity * Time.deltaTime;
-        controller.Move(velocity * Time.deltaTime);
+
+        move += velocity;
     }
 
     private void HandleAttackInput()
@@ -176,5 +204,16 @@ public class PlayerMovement : MonoBehaviour
             }
         }
         return closest;
+    }
+
+    //Hàm này sẽ được gọi từ PlayerCollision khi bị đánh trúng
+    public void ApplyKnockback(Vector3 hitSource)
+    {
+        Vector3 direction = transform.position - hitSource;
+        direction.y = 0;
+        direction.Normalize();
+
+        knockbackVelocity = direction * knockbackForce;
+        knockbackTimer = knockbackDuration;
     }
 }

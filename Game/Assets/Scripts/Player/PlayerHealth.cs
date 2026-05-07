@@ -6,18 +6,24 @@ public class PlayerHealth : MonoBehaviour
     private float currentHealth;
     private Animator animator;
 
-    void Start()
+    void Awake()
     {
         currentHealth = maxHealth;
         animator = GetComponentInChildren<Animator>();
     }
 
+    public void Heal(float amount)
+    {
+        currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
+        Debug.Log("Player con: " + currentHealth + " mau");
+    }
+
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
-        Debug.Log("Player còn: " + currentHealth + " máu");
 
         if (animator != null) animator.SetTrigger("GetHit");
+        Debug.Log("Player con: " + currentHealth + " mau");
 
         if (currentHealth <= 0) Die();
     }

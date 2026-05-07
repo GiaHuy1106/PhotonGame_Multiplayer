@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 3
   tags:
   - Enemy
+  - Blade
+  - Axe
+  - redPotion
+  - bluePotion
+  - greenPotion
   layers:
   - Default
   - TransparentFX
