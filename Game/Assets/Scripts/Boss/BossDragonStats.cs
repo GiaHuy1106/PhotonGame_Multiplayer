@@ -67,7 +67,6 @@ public class BossDragonStats : MonoBehaviour
 
         if (aiScript != null)
         {
-
             aiScript.TriggerGetHit(getHitDuration);
         }
     }
