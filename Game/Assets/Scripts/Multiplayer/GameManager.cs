@@ -26,7 +26,7 @@ public class GameManager : NetworkBehaviour
     void RPC_RequestSpawn(PlayerRef player)
     {
         
-        Runner.Spawn(playerPrefab, Utils.GetRandomArroundPoint(spawnPoint.position), inputAuthority: player, onBeforeSpawned: (Runner, newOBJ) => 
+        Runner.Spawn(playerPrefab,spawnPoint.position, inputAuthority: player, onBeforeSpawned: (Runner, newOBJ) => 
         {
             Runner.SetPlayerObject(player, newOBJ);
         });
