@@ -48,6 +48,7 @@ public class MainMenuUIHandler : MonoBehaviour
             playerNameInput.ActivateInputField();
             return;
         }
+        NetworkRunnerHandler.Ins.nickNamePlayer = playerNameInput.text;
         Play.interactable = false;
         NetworkRunnerHandler.Ins.JoinLobby( (value) => 
         {

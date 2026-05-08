@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5398894396562915118}
   - component: {fileID: 5501106580225613874}
   - component: {fileID: 7653574419871065699}
+  - component: {fileID: -8193400712245435428}
   m_Layer: 0
   m_Name: NetworkRunnerPrefab
   m_TagString: Untagged
@@ -70,3 +71,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: daf91e69d4d91f5479f5a898fa319dfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spawner
+  PlayerElementRoomNetworkPrefab: {fileID: -8661410278380672414, guid: 5f05a4bae665fa147b792e78669666f2, type: 3}
+--- !u!114 &-8193400712245435428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3189753005762098599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90a93abf1a391964a94e5c139605105b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Unity::Fusion.NetworkSceneManagerDefault
+  IsSceneTakeOverEnabled: 1
+  LogSceneLoadErrors: 1
+  DestroySpawnedPrefabsOnSceneUnload: 1
