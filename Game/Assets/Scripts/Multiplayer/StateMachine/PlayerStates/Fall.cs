@@ -17,7 +17,7 @@ public class Fall : IState
         if (ctx.controller.Grounded)
         {
             ctx.player.isJumping = false;
-            ctx.ChangeMovementState(nameof(JumpEnd));
+            ctx.ChangeMovementState(nameof(Idle));
         }
     }
 

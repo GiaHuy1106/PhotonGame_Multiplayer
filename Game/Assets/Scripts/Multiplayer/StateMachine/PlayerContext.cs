@@ -63,6 +63,7 @@ public class PlayerContext
     {
         var combatState = Enum.Parse<CombatState>(state);
         player.ChangeCombatState(combatState);
+        Debug.Log(combatState.ToString());
         combatMachine.ChangeState(GetState(state));
     }
     public void SetPlayer(NetworkPlayer player)

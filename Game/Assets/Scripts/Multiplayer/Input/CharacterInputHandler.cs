@@ -37,8 +37,8 @@ public class CharacterInputHandler : MonoBehaviour
         direction.y = Input.GetAxisRaw("Vertical");
         isJump = Input.GetKeyDown(KeyCode.Space);
         isAttack = Input.GetMouseButtonDown(0);
-        isLeftShift = Input.GetKeyDown(KeyCode.LeftShift);
-        isDefend = Input.GetKeyDown(KeyCode.F);
+        isLeftShift = Input.GetKey(KeyCode.LeftShift);
+        isDefend = Input.GetKey(KeyCode.F);
         rotationCamera = localCamera.eulerAngles.y;
         pitchYaw = Input.mousePosition;
     }

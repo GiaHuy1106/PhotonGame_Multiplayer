@@ -23,14 +23,14 @@ public class Move : IState
         {
           
 
-            float maxSpeed = ctx.inputData.isLeftShift ? 12 : 15;
-            float speed = ctx.inputData.isDefend ? maxSpeed * .7f : maxSpeed; // giam 30% toc do khi vua di chuyen vua defend
-            ctx.controller.maxSpeed = speed;
-            animator.SetFloat("moveSpeed", speed/maxSpeed);
-            Vector2 dir = ctx.inputData.direction;
-            float targetAngle = Mathf.Atan2(dir.x, dir.y) * Mathf.Rad2Deg + ctx.inputData.rotationCamera;
-            Vector3 movDir = Quaternion.Euler(0, targetAngle, 0) * Vector3.forward;            
-            ctx.controller.Move(movDir);
+            //float maxSpeed = ctx.inputData.isLeftShift ? 12 : 15;
+            //float speed = ctx.inputData.isDefend ? maxSpeed * .7f : maxSpeed; // giam 30% toc do khi vua di chuyen vua defend
+            //ctx.controller.maxSpeed = speed;
+            //animator.SetFloat("moveSpeed", speed/maxSpeed);
+            //Vector2 dir = ctx.inputData.direction;
+            //float targetAngle = Mathf.Atan2(dir.x, dir.y) * Mathf.Rad2Deg + ctx.inputData.rotationCamera;
+            //Vector3 movDir = Quaternion.Euler(0, targetAngle, 0) * Vector3.forward;            
+            //ctx.controller.Move(movDir);
         }
         else
         {

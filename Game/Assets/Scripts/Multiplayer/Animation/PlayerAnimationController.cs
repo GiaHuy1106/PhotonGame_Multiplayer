@@ -22,7 +22,7 @@ public class PlayerAnimatorController
     public static int ATTACK02_HASH = Animator.StringToHash(nameof(Attack02));
     public static int IDLE_HASH = Animator.StringToHash(nameof(Idle));
     public static int JUMPSTART_HASH = Animator.StringToHash(nameof(JumpStart));
-    public static int JUMPEND_HASH = Animator.StringToHash(nameof(JumpEnd));
+    //public static int JUMPEND_HASH = Animator.StringToHash(nameof(JumpEnd));
     public static int FALL_HASH = Animator.StringToHash(nameof(Fall));
     public static int DEFEND_HASH = Animator.StringToHash(nameof(Defend));
     public static int DEFENDHIT_HASH = Animator.StringToHash(nameof(DefendHit));
