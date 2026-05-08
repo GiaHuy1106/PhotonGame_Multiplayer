@@ -9,13 +9,15 @@ public class JumpStart : IState
     }
     public void Enter()
     {
+        ctx.controller.Jump();
         Debug.Log("Enter JumpStart");
-        ctx.anim.PlayClip(PlayerAnimatorController.JUMPSTART_HASH);
+        Debug.Log("Velocity: " + ctx.controller.Velocity);
     }
 
     public void Execute(float tick)
     {
-        if(ctx.controller.Velocity.y < 0 && !ctx.controller.Grounded)
+        Debug.Log(ctx.controller.Velocity);
+        if(ctx.controller.Velocity.y <= 0f && !ctx.controller.Grounded)
         {
             ctx.ChangeMovementState(nameof(Fall));
         }

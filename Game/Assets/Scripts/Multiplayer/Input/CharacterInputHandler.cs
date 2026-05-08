@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CharacterInputHandler : MonoBehaviour
 {
@@ -12,8 +13,22 @@ public class CharacterInputHandler : MonoBehaviour
     bool isDefend = false;
     float rotationCamera;
     Vector2 pitchYaw = Vector2.zero;
+    private void Awake()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+
+    }
+
     private void Update()
     {
+        if (Keyboard.current.leftCtrlKey.isPressed)
+        {
+            Cursor.lockState = CursorLockMode.None;
+        }
+        if (Keyboard.current.leftCtrlKey.wasReleasedThisFrame)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
         if (!player.Object.HasInputAuthority)
         {
             return;

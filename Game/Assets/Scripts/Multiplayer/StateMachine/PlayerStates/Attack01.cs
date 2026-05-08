@@ -12,13 +12,12 @@ public class Attack01 : IState
     {
         Debug.Log("Enter Attack 1");
         if (animator == null) animator = ctx.anim.GetAnimator();
-        ctx.anim.PlayClip(PlayerAnimatorController.ATTACK01_HASH, 1);
     }
 
     public void Execute(float tick)
     {
         var stateInfo = animator.GetCurrentAnimatorStateInfo(1);
-        if(stateInfo.IsName(nameof(Attack01)) && stateInfo.normalizedTime >= .99f){
+        if(stateInfo.IsName(nameof(Attack01)) && stateInfo.normalizedTime >= .9f){
             if (ctx.inputData.isAttack)
             {
                 ctx.ChangeCombatState(nameof(Attack02));

@@ -10,11 +10,14 @@ public class Defend : IState
     public void Enter()
     {
         Debug.Log("Enter Defend");
-        ctx.anim.PlayClip(PlayerAnimatorController.DEFEND_HASH);
     }
 
     public void Execute(float tick)
     {
+        if (!ctx.inputData.isDefend)
+        {
+            ctx.ChangeCombatState(nameof(NoneState));
+        }
     }
 
     public void Exit()

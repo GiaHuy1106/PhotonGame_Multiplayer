@@ -1418,6 +1418,8 @@ MonoBehaviour:
   animator: {fileID: 1516447475883971089}
   controller: {fileID: 6446823612746033855}
   hphandler: {fileID: 384819521324123475}
+  _locomotionState: 0
+  _combatState: 0
 --- !u!114 &8711018968898260102
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1512,10 +1514,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkMecanimAnimator
   Animator: {fileID: 1516447475883971089}
   ApplyTiming: 2
-  SyncSettings: 112
-  StateHashes: 00000000b1afdc305a6c54cd18d695eb9cf543043270625b602a1d72871fbb426cdc33bf32edce8b7143fd8837b935014e73a6a752fb1934b93891c9d46c38e4562374616bd5a32d398fdc042b1a167c7940695598532995a985a7acf1afa2dfeeb95cb2edb25a4f30fbb7e657e353d68aaabe7f
+  SyncSettings: 2
+  StateHashes: 00000000b1afdc305a6c54cd18d695eb9cf543043270625b602a1d72871fbb426cdc33bf32edce8b7143fd8837b935014e73a6a752fb1934b93891c9d46c38e45623746146980c4f14c273662b1a167c7940695598532995a985a7ac9fdd52debf9e9926edb25a4f30fbb7e657e353d68aaabe7f
   TriggerHashes: 00000000
-  TotalWords: 5
+  TotalWords: 1
 --- !u!114 &384819521324123475
 MonoBehaviour:
   m_ObjectHideFlags: 0

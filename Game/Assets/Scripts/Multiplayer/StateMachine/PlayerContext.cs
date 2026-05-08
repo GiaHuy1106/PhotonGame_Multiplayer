@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -51,21 +52,32 @@ public class PlayerContext
     {
 
         return playerStates[key];
-    }
+    }   
     public void ChangeMovementState(string state)
     {
+        var locomotionState = Enum.Parse<LocomotionState>(state);
+        player.ChangeLocomotionState(locomotionState);
         locomotionMachine.ChangeState(GetState(state));
     }
     public void ChangeCombatState(string state)
     {
+        var combatState = Enum.Parse<CombatState>(state);
+        player.ChangeCombatState(combatState);
         combatMachine.ChangeState(GetState(state));
     }
+    public void SetPlayer(NetworkPlayer player)
+    {
+        this.player = player;
+    }
+
     public PlayerAnimatorController anim;
     public Fusion.NetworkCharacterController controller;
+    public NetworkPlayer player;
     public HPHandler health;
     public NetworkInputData inputData;
     public StateMachine locomotionMachine;
     public StateMachine combatMachine;
     public Dictionary<string, IState> playerStates = new();
+   
 
 }

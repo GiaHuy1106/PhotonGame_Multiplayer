@@ -15,13 +15,12 @@ public class Attack02 : IState
         {
             anim = ctx.anim.GetAnimator();
         }
-        ctx.anim.PlayClip(PlayerAnimatorController.ATTACK02_HASH, 1);
     }
 
     public void Execute(float tick)
     {
         var stateInfo = anim.GetCurrentAnimatorStateInfo(1);
-        if (stateInfo.IsName(nameof(Attack02)) && stateInfo.normalizedTime >= .99f)
+        if (stateInfo.IsName(nameof(Attack02)) && stateInfo.normalizedTime >= .9f)
         {
             ctx.ChangeCombatState(nameof(NoneState));
         }
