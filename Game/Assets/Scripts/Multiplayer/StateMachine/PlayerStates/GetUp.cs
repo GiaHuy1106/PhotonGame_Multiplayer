@@ -1,15 +1,16 @@
 using UnityEngine;
 
-public class Die : IState
+public class GetUp : IState
 {
     PlayerContext ctx;
-    public Die(PlayerContext ctx)
+    public GetUp(PlayerContext ctx)
     {
         this.ctx = ctx;
     }
+
     public void Enter()
     {
-        Debug.Log("Enter Die");
+        Debug.Log("Enter GetUp");
     }
 
     public void Execute(float tick)

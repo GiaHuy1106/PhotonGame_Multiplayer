@@ -15,7 +15,6 @@ public class JumpEnd : IState
         {
             anim = ctx.anim.GetAnimator();
         }
-        ctx.anim.PlayClip(PlayerAnimatorController.JUMPEND_HASH);
     }
 
     public void Execute(float tick)
@@ -25,9 +24,8 @@ public class JumpEnd : IState
         velocity.x /= 2;
         velocity.z /= 2;
         ctx.controller.Velocity = velocity;
-        var stateInfo = anim.GetCurrentAnimatorStateInfo(0);
-        
-        if (stateInfo.IsName(nameof(JumpEnd)) && stateInfo.normalizedTime >= .99f)
+        var stateInfo = anim.GetCurrentAnimatorStateInfo(0);        
+        if (stateInfo.IsName(nameof(JumpEnd)) && stateInfo.normalizedTime >= .9f)
         {
             ctx.ChangeMovementState(nameof(Idle));
         }

@@ -10,7 +10,6 @@ public class Idle : IState
     public void Enter()
     {
         Debug.Log("Enter Idle");
-        ctx.anim.PlayClip(PlayerAnimatorController.IDLE_HASH);
     }
 
     public void Execute(float tick)

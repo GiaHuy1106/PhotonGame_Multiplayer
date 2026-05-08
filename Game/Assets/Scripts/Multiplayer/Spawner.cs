@@ -103,10 +103,18 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
     public void OnSceneLoadDone(NetworkRunner runner)
     {
         Debug.Log("OnSceneLoadDone called");
-        Utils.DelayCall(1f, () => {
+        Utils.DelayCall(2f, () => {
             if(SceneManager.GetActiveScene().buildIndex == 3)
             {
-                FindAnyObjectByType<GameManager>().SpawnPlayer(runner.LocalPlayer);
+                var gameManager = FindAnyObjectByType<GameManager>(); 
+                if(gameManager != null)
+                {
+                    Debug.Log("Find gameManger");
+                    gameManager.SpawnPlayer(runner.LocalPlayer);
+                }else
+                {
+                    Debug.Log("GameManagerNotFound");
+                }
             }
         });
        
