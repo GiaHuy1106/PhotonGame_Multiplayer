@@ -1,0 +1,41 @@
+{
+    "version": 1,
+    "name": "InputActionsAssets",
+    "maps": [
+        {
+            "name": "Player",
+            "id": "b70ba6fb-9de1-4aa6-8f42-347f195d2df8",
+            "actions": [
+                {
+                    "name": "Chat",
+                    "type": "Button",
+                    "id": "e6166020-5bf4-422b-b49e-12e4db6126c8",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "cd0f2423-9be8-4162-9125-f4023bfe1426",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Chat",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        {
+            "name": "Keyboard",
+            "bindingGroup": "Keyboard",
+            "devices": []
+        }
+    ]
+}
