@@ -199,6 +199,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SlimePBR
       objectReference: {fileID: 0}
+    - target: {fileID: 1931298151966786, guid: 928a1377c1cd4515b208fef3a396b8ea, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4047972025199878, guid: 928a1377c1cd4515b208fef3a396b8ea, type: 3}
       propertyPath: m_LocalPosition.x
       value: 11.0195265
@@ -1787,10 +1791,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SlimePBR (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 1931298151966786, guid: 928a1377c1cd4515b208fef3a396b8ea, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4047972025199878, guid: 928a1377c1cd4515b208fef3a396b8ea, type: 3}
       propertyPath: m_LocalPosition.x
       value: 8.789
@@ -1830,10 +1830,6 @@ PrefabInstance:
     - target: {fileID: 4047972025199878, guid: 928a1377c1cd4515b208fef3a396b8ea, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9096206131703916322, guid: 928a1377c1cd4515b208fef3a396b8ea, type: 3}
-      propertyPath: attackRange
-      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 9096206131703916322, guid: 928a1377c1cd4515b208fef3a396b8ea, type: 3}
       propertyPath: 'waypoints.Array.data[0]'
@@ -2042,10 +2038,6 @@ PrefabInstance:
     - target: {fileID: 174418, guid: 36c38a65d57de7d4a9a582f9ee857701, type: 3}
       propertyPath: m_Name
       value: Purple
-      objectReference: {fileID: 0}
-    - target: {fileID: 174418, guid: 36c38a65d57de7d4a9a582f9ee857701, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 489222, guid: 36c38a65d57de7d4a9a582f9ee857701, type: 3}
       propertyPath: m_LocalPosition.x

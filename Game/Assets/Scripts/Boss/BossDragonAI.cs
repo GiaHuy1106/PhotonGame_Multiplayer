@@ -19,7 +19,7 @@ public class BossDragonAI : MonoBehaviour
     public GameObject fireColumnObject;
 
     private float hitTimer = 0f;
-
+    private float nextGrowlTime = 0f;
     private Transform playerTarget;
     private NavMeshAgent agent;
     private Animator animator;
@@ -48,6 +48,11 @@ public class BossDragonAI : MonoBehaviour
         {
             case BossState.Idle:
                 agent.isStopped = true;
+                if (Time.time >= nextGrowlTime)
+                {
+                    GetComponent<EnemyFX>().PlayDragonBossGrawl();
+                    nextGrowlTime = Time.time + Random.Range(4f, 10f);
+                }
                 if (distanceToPlayer <= detectionRange)
                 {
                     currentState = BossState.Chasing;
