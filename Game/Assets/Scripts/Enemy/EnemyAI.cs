@@ -33,6 +33,7 @@ public class EnemyAI : MonoBehaviour
     private Transform playerTarget;
     private NavMeshAgent agent;
     private Animator animator;
+    public float TimeToDie = 5f; 
     [Header("Loot Drop")]
     private EnemyLootDrop lootDrop;
     void Start()
@@ -140,7 +141,13 @@ public class EnemyAI : MonoBehaviour
             if (dist <= attackRange + 0.5f)
             {
                 PlayerHealth pHealth = playerTarget.GetComponent<PlayerHealth>();
-                if (pHealth != null) pHealth.TakeDamage(10f);
+                if (pHealth != null)
+                {
+                    pHealth.TakeDamage(10f);
+                    Vector3 hitPoint = playerTarget.position + Vector3.up * 1f;
+                    GetComponent<EnemyFX>().SpawnHitVFX(hitPoint);
+                    GetComponent<EnemyFX>().PlayHitSound();
+                }
             }
         }
     }
@@ -170,7 +177,7 @@ public class EnemyAI : MonoBehaviour
         {
             if (animator != null) animator.ResetTrigger("Attack");
             if (animator != null) animator.SetTrigger("GetHit");
-
+            GetComponent<EnemyFX>().PlayGetHitSound();
             currentState = EnemyState.GetHit;
             hitTimer = getHitDuration;
         }
@@ -178,6 +185,11 @@ public class EnemyAI : MonoBehaviour
 
     private void Die()
     {
+        Collider mainCollider = GetComponent<Collider>();
+        if (mainCollider != null)
+        {
+            mainCollider.enabled = false;
+        }
         currentState = EnemyState.Die;
         agent.isStopped = true;
         agent.enabled = false;
@@ -187,7 +199,8 @@ public class EnemyAI : MonoBehaviour
         {
             lootDrop.DropLoot();
         }
-        Destroy(gameObject, 5f);
+        GetComponent<EnemyFX>().PlayDieSound();
+        Destroy(gameObject, TimeToDie);
     }
 
     private void FindPlayer()

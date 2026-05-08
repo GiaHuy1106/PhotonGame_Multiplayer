@@ -19,12 +19,13 @@ public class BossDragonAI : MonoBehaviour
     public GameObject fireColumnObject;
 
     private float hitTimer = 0f;
-
+    private float nextGrowlTime = 0f;
     private Transform playerTarget;
     private NavMeshAgent agent;
     private Animator animator;
     private BossDragonStats stats;
-
+    public bool isAttacking = false;      
+    public bool isBreathingFire = false;
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -47,6 +48,11 @@ public class BossDragonAI : MonoBehaviour
         {
             case BossState.Idle:
                 agent.isStopped = true;
+                if (Time.time >= nextGrowlTime)
+                {
+                    GetComponent<EnemyFX>().PlayDragonBossGrawl();
+                    nextGrowlTime = Time.time + Random.Range(4f, 10f);
+                }
                 if (distanceToPlayer <= detectionRange)
                 {
                     currentState = BossState.Chasing;
@@ -71,11 +77,15 @@ public class BossDragonAI : MonoBehaviour
                 break;
 
             case BossState.Attacking:
-                agent.isStopped = true;
-                FaceTarget();
-
+                 agent.isStopped = true;
+                if (!isAttacking)
+                {
+                    FaceTarget();
+                }
+                if (isAttacking) break;
                 if (Time.time >= lastAttackTime + attackCooldown)
                 {
+                    isAttacking = true;
                     if (distanceToPlayer <= meleeRange)
                     {
                         if (animator != null) animator.SetTrigger("MeleeAttack");
@@ -83,12 +93,13 @@ public class BossDragonAI : MonoBehaviour
                     else if (distanceToPlayer <= fireRange)
                     {
                         if (animator != null) animator.SetTrigger("FireAttack");
+                        isBreathingFire = true;
                     }
 
                     lastAttackTime = Time.time;
                 }
 
-                if (distanceToPlayer > fireRange) currentState = BossState.Chasing;
+                if (!isAttacking && distanceToPlayer > fireRange) currentState = BossState.Chasing;
                 break;
 
             case BossState.GetHit:
@@ -128,7 +139,19 @@ public class BossDragonAI : MonoBehaviour
             fireColumnObject.SetActive(false);
         }
     }
-
+    public void ForceStopFireBreath()
+    {
+        StopFlamethrower();
+        isBreathingFire = false;
+    }
+    public void ResetAttackState()
+    {
+        isAttacking = false;
+        if (isBreathingFire)
+        {
+            ForceStopFireBreath();
+        }
+    }
     private void FindPlayer()
     {
         if (playerTarget == null)
@@ -153,10 +176,16 @@ public class BossDragonAI : MonoBehaviour
         if (playerTarget != null && stats != null)
         {
             float dist = Vector3.Distance(transform.position, playerTarget.position);
-            if (dist <= meleeRange + 1f) 
+            if (dist <= meleeRange + 1f)
             {
                 PlayerHealth pHealth = playerTarget.GetComponent<PlayerHealth>();
-                if (pHealth != null) pHealth.TakeDamage(stats.damage);
+                if (pHealth != null)
+                {
+                    pHealth.TakeDamage(stats.damage);
+                    Vector3 hitPoint = playerTarget.position + Vector3.up * 1f;
+                    GetComponent<EnemyFX>().SpawnHitVFX(hitPoint);
+                    GetComponent<EnemyFX>().PlayDragonClaw();
+                }
             }
         }
     }

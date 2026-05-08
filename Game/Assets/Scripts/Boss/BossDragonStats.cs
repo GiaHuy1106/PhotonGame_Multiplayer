@@ -62,17 +62,22 @@ public class BossDragonStats : MonoBehaviour
             animator.ResetTrigger("MeleeAttack");
             animator.ResetTrigger("FireAttack");
             animator.SetTrigger("GetHit");
+            GetComponent<EnemyFX>().PlayGetHitSound();
         }
 
         if (aiScript != null)
+        {
             aiScript.TriggerGetHit(getHitDuration);
+        }
     }
+
     private void Die()
     {
         if (aiScript != null) aiScript.TriggerDeath();
 
         if (animator != null) animator.SetTrigger("Die");
         if (healthUI != null) healthUI.HideUI();
+        GetComponent<EnemyFX>().PlayDieSound();
         Destroy(gameObject, 10f);
     }
 }
