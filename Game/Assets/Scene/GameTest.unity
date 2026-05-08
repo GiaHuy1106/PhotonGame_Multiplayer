@@ -199,10 +199,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SlimePBR
       objectReference: {fileID: 0}
-    - target: {fileID: 1931298151966786, guid: 928a1377c1cd4515b208fef3a396b8ea, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4047972025199878, guid: 928a1377c1cd4515b208fef3a396b8ea, type: 3}
       propertyPath: m_LocalPosition.x
       value: 11.0195265
@@ -1836,6 +1832,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9096206131703916322, guid: 928a1377c1cd4515b208fef3a396b8ea, type: 3}
+      propertyPath: attackRange
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 9096206131703916322, guid: 928a1377c1cd4515b208fef3a396b8ea, type: 3}
       propertyPath: 'waypoints.Array.data[0]'
       value: 
       objectReference: {fileID: 1739985898}
@@ -2043,6 +2043,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Purple
       objectReference: {fileID: 0}
+    - target: {fileID: 174418, guid: 36c38a65d57de7d4a9a582f9ee857701, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 489222, guid: 36c38a65d57de7d4a9a582f9ee857701, type: 3}
       propertyPath: m_LocalPosition.x
       value: -4
@@ -2195,10 +2199,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 252465904558530009, guid: 14eef0d96509437469aa5126d10920e0, type: 3}
-      propertyPath: burningVFXPrefab
-      value: 
-      objectReference: {fileID: 1000010823978654, guid: 3228a22491941734bb83ad691d17fcb9, type: 3}
     - target: {fileID: 2169243280838930756, guid: 14eef0d96509437469aa5126d10920e0, type: 3}
       propertyPath: healthUI
       value: 
@@ -2206,10 +2206,6 @@ PrefabInstance:
     - target: {fileID: 4216656751468557269, guid: 14eef0d96509437469aa5126d10920e0, type: 3}
       propertyPath: m_Name
       value: Boss
-      objectReference: {fileID: 0}
-    - target: {fileID: 4216656751468557269, guid: 14eef0d96509437469aa5126d10920e0, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7166780732799261940, guid: 14eef0d96509437469aa5126d10920e0, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2659,11 +2655,11 @@ PrefabInstance:
       objectReference: {fileID: 1610493020}
     - target: {fileID: 3424006782325641899, guid: f16d655b35e8aec4aa139c6492cecb02, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3424006782325641899, guid: f16d655b35e8aec4aa139c6492cecb02, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3424006782325641899, guid: f16d655b35e8aec4aa139c6492cecb02, type: 3}
       propertyPath: m_SizeDelta.x
@@ -2687,7 +2683,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7597920084025541373, guid: f16d655b35e8aec4aa139c6492cecb02, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7607702155203092611, guid: f16d655b35e8aec4aa139c6492cecb02, type: 3}
       propertyPath: inventory

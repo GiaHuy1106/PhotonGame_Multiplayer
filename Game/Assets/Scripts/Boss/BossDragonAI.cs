@@ -153,10 +153,15 @@ public class BossDragonAI : MonoBehaviour
         if (playerTarget != null && stats != null)
         {
             float dist = Vector3.Distance(transform.position, playerTarget.position);
-            if (dist <= meleeRange + 1f) 
+            if (dist <= meleeRange + 1f)
             {
                 PlayerHealth pHealth = playerTarget.GetComponent<PlayerHealth>();
-                if (pHealth != null) pHealth.TakeDamage(stats.damage);
+                if (pHealth != null)
+                {
+                    pHealth.TakeDamage(stats.damage);
+                    Vector3 hitPoint = playerTarget.position + Vector3.up * 1f;
+                    GetComponent<EnemyFX>().SpawnHitVFX(hitPoint);
+                }
             }
         }
     }
