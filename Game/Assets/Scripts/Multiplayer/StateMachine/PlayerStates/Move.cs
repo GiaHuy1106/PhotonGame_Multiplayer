@@ -33,7 +33,7 @@ public class Move : IState
             ctx.controller.maxSpeed = speed;
             animator.SetFloat("moveSpeed", speed/maxSpeed);
             Vector2 dir = ctx.inputData.direction;
-            float targetAngle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg + ctx.inputData.rotationCamera;
+            float targetAngle = Mathf.Atan2(dir.x, dir.y) * Mathf.Rad2Deg + ctx.inputData.rotationCamera;
             Vector3 movDir = Quaternion.Euler(0, targetAngle, 0) * Vector3.forward;
             Debug.Log("dirInput: " + dir);
             Debug.Log("ctx.RotationCamera = " + ctx.inputData.rotationCamera);
