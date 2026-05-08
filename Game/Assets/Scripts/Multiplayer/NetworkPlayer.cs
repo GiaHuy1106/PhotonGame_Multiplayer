@@ -1,4 +1,6 @@
+using System;
 using Fusion;
+using TMPro;
 using UnityEngine;
 
 public class NetworkPlayer : NetworkBehaviour
@@ -9,6 +11,7 @@ public class NetworkPlayer : NetworkBehaviour
     [SerializeField] Animator animator;
     [SerializeField] NetworkCharacterController controller;
     [SerializeField] HPHandler hphandler;
+    [SerializeField] TextMeshProUGUI text;
     [Networked, OnChangedRender(nameof(OnLocomotionStateChange))]
     public LocomotionState locomotionState { get; set; }
     [Networked, OnChangedRender(nameof(OnCombatStateChanged))]
@@ -20,6 +23,16 @@ public class NetworkPlayer : NetworkBehaviour
     StateMachine locomotion;
     StateMachine combat;
     PlayerContext ctx;
+    [Networked, OnChangedRender(nameof(OnNickNameChanged))]
+    public NetworkString<_32> nickName { get; set; }
+
+    public void OnNickNameChanged()
+    {
+        Debug.Log(gameObject.name + ": OnNickNameChanged");
+        if(text != null)
+        text.text = nickName.ToString();
+    }
+
     private void Awake()
     {
         Debug.Log("NetworkPlayer Awake");
@@ -56,6 +69,10 @@ public class NetworkPlayer : NetworkBehaviour
             Local = this;
             _camera.gameObject.SetActive(true);
             cinemachine.gameObject.SetActive(true);
+            
+                Debug.Log(gameObject.name + ": PlayerEelemntRoom Spawned on client");
+                Utils.Delay1Frame(() => RPC_RequestUserName(NetworkRunnerHandler.Ins.nickNamePlayer));
+            
         }
         else
         {
@@ -63,6 +80,14 @@ public class NetworkPlayer : NetworkBehaviour
             Destroy(_camera.gameObject);
         }
     }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    void RPC_RequestUserName(string userName)
+    {
+        Debug.Log(gameObject.name + ": RequestUserID called");
+        this.nickName = userName;
+    }
+
     NetworkInputData inputData;
 
     [Networked]
