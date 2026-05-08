@@ -146,7 +146,7 @@ public class EnemyAI : MonoBehaviour
                     pHealth.TakeDamage(10f);
                     Vector3 hitPoint = playerTarget.position + Vector3.up * 1f;
                     GetComponent<EnemyFX>().SpawnHitVFX(hitPoint);
-                    //GetComponent<EnemyFX>().PlayHitSound();
+                    GetComponent<EnemyFX>().PlayHitSound();
                 }
             }
         }
@@ -177,7 +177,7 @@ public class EnemyAI : MonoBehaviour
         {
             if (animator != null) animator.ResetTrigger("Attack");
             if (animator != null) animator.SetTrigger("GetHit");
-
+            GetComponent<EnemyFX>().PlayGetHitSound();
             currentState = EnemyState.GetHit;
             hitTimer = getHitDuration;
         }
@@ -199,6 +199,7 @@ public class EnemyAI : MonoBehaviour
         {
             lootDrop.DropLoot();
         }
+        GetComponent<EnemyFX>().PlayDieSound();
         Destroy(gameObject, TimeToDie);
     }
 
