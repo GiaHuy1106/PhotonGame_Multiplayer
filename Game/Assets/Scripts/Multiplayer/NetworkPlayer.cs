@@ -13,6 +13,9 @@ public class NetworkPlayer : NetworkBehaviour
     public LocomotionState locomotionState { get; set; }
     [Networked, OnChangedRender(nameof(OnCombatStateChanged))]
     public CombatState combatState { get; set; }
+
+    [Networked]
+    public bool IsAttacking { get; set; }
     public static NetworkPlayer Local;
     StateMachine locomotion;
     StateMachine combat;
@@ -33,7 +36,7 @@ public class NetworkPlayer : NetworkBehaviour
            .AddState(nameof(Attack01), new Attack01(ctx))
            .AddState(nameof(Attack02), new Attack02(ctx))
            .AddState(nameof(JumpStart), new JumpStart(ctx))
-           .AddState(nameof(JumpEnd), new JumpEnd(ctx))
+           //.AddState(nameof(JumpEnd), new JumpEnd(ctx))
            .AddState(nameof(Fall), new Fall(ctx))
            .AddState(nameof(Defend), new Defend(ctx))
            .AddState(nameof(Die), new Die(ctx))
@@ -63,7 +66,7 @@ public class NetworkPlayer : NetworkBehaviour
     NetworkInputData inputData;
 
     [Networked]
-    public bool isJumping { get; set; }
+    public bool isJumping { get; set; }    
     public override void FixedUpdateNetwork()
     {
         if (Object.HasStateAuthority && hphandler.IsDead)
@@ -72,26 +75,31 @@ public class NetworkPlayer : NetworkBehaviour
         }
         if (GetInput(out inputData))
         {
-            locomotion.Update(Runner.DeltaTime);
-            combat.Update(Runner.DeltaTime);
             ctx.SetInput(inputData);
+            MoveHandle(inputData);                  
             if (inputData.isJump && controller.Grounded && !isJumping)
             {
                 ctx.ChangeMovementState(nameof(JumpStart));
             }
-            if (inputData.isAttack)
+            Debug.Log("attacking: " + inputData.isAttack);
+            if (inputData.isAttack && IsAttacking == false)
             {
+                Debug.Log("Attack");
                 ctx.ChangeCombatState(nameof(Attack01));
+                IsAttacking = true;
             }
             if (inputData.isDefend)
             {
                 ctx.ChangeCombatState(nameof(Defend));
             }
+            locomotion.Update(Runner.DeltaTime);
+            combat.Update(Runner.DeltaTime);
         }
         else
         {
             inputData.Reset();
             ctx.SetInput(inputData);
+            MoveHandle(inputData);
             locomotion.Update(Runner.DeltaTime);
             combat.Update(Runner.DeltaTime);
         }
@@ -114,7 +122,7 @@ public class NetworkPlayer : NetworkBehaviour
                 ctx.anim.PlayClip(PlayerAnimatorController.FALL_HASH);
                 break;
             case LocomotionState.JumpEnd:
-                ctx.anim.PlayClip(PlayerAnimatorController.JUMPEND_HASH);
+                //ctx.anim.PlayClip(PlayerAnimatorController.JUMPEND_HASH);
                 break;
             case LocomotionState.Die:
                 ctx.anim.PlayClip(PlayerAnimatorController.DIE_HASH);
@@ -170,4 +178,31 @@ public class NetworkPlayer : NetworkBehaviour
     {
         //animator.Play();
     }
+
+    void MoveHandle(NetworkInputData inputData)
+    {
+        float maxSpeed = inputData.isLeftShift ? 12 : 15;
+        float speed = inputData.isDefend ? maxSpeed * .7f : maxSpeed;
+
+        controller.maxSpeed = speed;
+
+        Vector2 dir = inputData.direction;
+
+        Vector3 movDir = Vector3.zero;
+
+        if (dir.sqrMagnitude > 0.001f)
+        {
+            float targetAngle =
+                Mathf.Atan2(dir.x, dir.y) * Mathf.Rad2Deg
+                + inputData.rotationCamera;
+
+            movDir =
+                Quaternion.Euler(0, targetAngle, 0)
+                * Vector3.forward;
+        }
+
+        controller.Move(movDir);
+        animator.SetFloat("moveSpeed", movDir.magnitude);
+    }
+
 }

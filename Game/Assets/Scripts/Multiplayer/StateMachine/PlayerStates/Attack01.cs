@@ -17,13 +17,14 @@ public class Attack01 : IState
     public void Execute(float tick)
     {
         var stateInfo = animator.GetCurrentAnimatorStateInfo(1);
-        if(stateInfo.IsName(nameof(Attack01)) && stateInfo.normalizedTime >= .9f){
+        if(stateInfo.IsName(nameof(Attack01)) && stateInfo.normalizedTime >= .85f){
             if (ctx.inputData.isAttack)
             {
                 ctx.ChangeCombatState(nameof(Attack02));
             }
-            else
+            else if(stateInfo.normalizedTime >= .99f)
             {
+                ctx.player.IsAttacking = false;
                 ctx.ChangeCombatState(nameof(NoneState));
             }
         }

@@ -22,6 +22,7 @@ public class Attack02 : IState
         var stateInfo = anim.GetCurrentAnimatorStateInfo(1);
         if (stateInfo.IsName(nameof(Attack02)) && stateInfo.normalizedTime >= .9f)
         {
+            ctx.player.IsAttacking = false;
             ctx.ChangeCombatState(nameof(NoneState));
         }
     }
