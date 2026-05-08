@@ -104,7 +104,7 @@ public class Spawner : MonoBehaviour, INetworkRunnerCallbacks
     {
         Debug.Log("OnSceneLoadDone called");
         Utils.DelayCall(2f, () => {
-            if(SceneManager.GetActiveScene().buildIndex == 3)
+            if(SceneManager.GetActiveScene().buildIndex == 2)
             {
                 var gameManager = FindAnyObjectByType<GameManager>(); 
                 if(gameManager != null)

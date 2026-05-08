@@ -18,4 +18,8 @@ public static class Utils
     {
         return new Vector3(UnityEngine.Random.Range(-10f, 10f), 1, UnityEngine.Random.Range(-10f, 10f));
     }
+    public static Vector3 GetRandomArroundPoint(Vector3 point)
+    {
+        return new Vector3(UnityEngine.Random.Range(-5f, 5f) + point.x, point.y, UnityEngine.Random.Range(-5f, 5f) + point.z);
+    }
 }

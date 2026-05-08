@@ -59,7 +59,7 @@ public class NetworkRoomManager : NetworkBehaviour, IPlayerJoined, IPlayerLeft
     {
         if (Runner.IsServer)
         {
-            Runner.LoadScene("TestScene");
+            Runner.LoadScene("GameScene");
         }
         else
         {
