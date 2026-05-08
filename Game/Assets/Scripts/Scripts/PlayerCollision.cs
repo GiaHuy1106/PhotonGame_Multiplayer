@@ -2,11 +2,28 @@ using UnityEngine;
 
 public class PlayerCollision : MonoBehaviour
 {
-    public void OnCollisionEnter(Collision other)
+    public PlayerMovement playerMovement;
+    public PlayerHealth playerHealth;
+
+    private float hitCooldown = 0.3f; // ✅ NOTE: thêm cooldown
+    private float hitTimer = 0f;
+
+    void Update()
     {
-        if (other.gameObject.CompareTag("Axe") || other.gameObject.CompareTag("Blade"))
+        if (hitTimer > 0) hitTimer -= Time.deltaTime; // ✅ NOTE
+    }
+
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (hitTimer > 0) return; // ✅ NOTE: chặn spam
+
+        if(hit.gameObject.CompareTag("Axe") || hit.gameObject.CompareTag("Blade"))
         {
-            Debug.Log("Player hit a weapon!");
+            playerHealth.TakeDamage(15);
+
+            playerMovement.ApplyKnockback(hit.transform.position);
+
+            hitTimer = hitCooldown; // ✅ NOTE: reset cooldown
         }
     }
 }

@@ -33,12 +33,13 @@ public class EnemyAI : MonoBehaviour
     private Transform playerTarget;
     private NavMeshAgent agent;
     private Animator animator;
-
+    [Header("Loot Drop")]
+    private EnemyLootDrop lootDrop;
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponentInChildren<Animator>();
-
+        lootDrop = GetComponent<EnemyLootDrop>();
         if (waypoints.Length > 0) currentState = EnemyState.Patrol;
     }
 
@@ -182,6 +183,10 @@ public class EnemyAI : MonoBehaviour
         agent.enabled = false;
 
         if (animator != null) animator.SetTrigger("Die");
+        if (lootDrop != null)
+        {
+            lootDrop.DropLoot();
+        }
         Destroy(gameObject, 5f);
     }
 
