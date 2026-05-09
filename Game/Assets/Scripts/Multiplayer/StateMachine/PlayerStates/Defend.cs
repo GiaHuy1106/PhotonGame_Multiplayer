@@ -9,7 +9,6 @@ public class Defend : IState
     }
     public void Enter()
     {
-        Debug.Log("Enter Defend");
     }
 
     public void Execute(float tick)

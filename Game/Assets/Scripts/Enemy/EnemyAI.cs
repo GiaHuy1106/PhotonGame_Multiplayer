@@ -16,6 +16,7 @@ public class EnemyAI : NetworkBehaviour, ITakeDamageable
 
     [Header("Stats")]
     [SerializeField] float maxHealth = 100f;
+    [SerializeField] HitboxRoot hitboxRoot;
     [Networked, OnChangedRender(nameof(OnHealthChanged))]
     public float health { get; set; }
 
@@ -60,6 +61,14 @@ public class EnemyAI : NetworkBehaviour, ITakeDamageable
         if(agent == null)
         {
             agent = GetComponent<NavMeshAgent>();
+        }
+        if (animator == null)
+        {
+            animator = GetComponent<Animator>();
+        }
+        if (hitboxRoot == null)
+        {
+            hitboxRoot = GetComponent<HitboxRoot>();
         }
     }
     public override void Spawned()
@@ -168,6 +177,7 @@ public class EnemyAI : NetworkBehaviour, ITakeDamageable
 
         if (attackCooldownTimer.ExpiredOrNotRunning(Runner))
         {
+            Debug.Log("Attack");
             // Trigger Animation qua RPC hoặc Networked Var (ở đây dùng Trigger cho đơn giản)
             var queryParams = new SphereOverlapQueryParams { 
                 Center = transform.position,
@@ -180,7 +190,7 @@ public class EnemyAI : NetworkBehaviour, ITakeDamageable
             int hitCount = Runner.LagCompensation.OverlapSphere(
              query, hits
          );
-            if (hits.Count > 0 )
+            if (hitCount > 0 )
             {
                 foreach (var hit in hits)
                 {
@@ -192,13 +202,14 @@ public class EnemyAI : NetworkBehaviour, ITakeDamageable
                     {
                         obj = hit.GameObject.GetComponent<NetworkObject>();
                     }
+                    Debug.Log("hit null: " + hit != null);
                     if(obj != null && obj.TryGetComponent<ITakeDamageable>(out var takeDamageOBJ))
                     {
                         takeDamageOBJ.TakeDamage(damage);
                     }
                 }
             }
-            RPC_PlayAttackEffects();
+            RPC_PlayAttackAnim();
             attackCooldownTimer = TickTimer.CreateFromSeconds(Runner, attackCooldown);
         }
 
@@ -237,6 +248,9 @@ public class EnemyAI : NetworkBehaviour, ITakeDamageable
 
     private void Die()
     {
+        if(IsDead) return;
+        hitboxRoot.HitboxRootActive = false;
+        GetComponent<Collider>().enabled = false;
         IsDead = true;
         currentState = EnemyState.Die;
         despawnTimer = TickTimer.CreateFromSeconds(Runner, TimeToDie);
@@ -252,30 +266,38 @@ public class EnemyAI : NetworkBehaviour, ITakeDamageable
 
     private void FindNearestPlayer()
     {
-        // Tối ưu: Chỉ tìm kiếm mỗi giây một lần thay vì mỗi tick
         if (Runner.Tick % 30 != 0 && playerTarget != null) return;
 
         float closestDist = float.MaxValue;
+        NetworkObject nearest = null; // Dùng biến tạm, không đụng playerTarget trong loop
+
         foreach (var player in Runner.ActivePlayers)
         {
             var pObj = Runner.GetPlayerObject(player);
-            if (pObj != null)
+
+            // Check null TRƯỚC
+            if (pObj == null) continue;
+
+            var hp = pObj.GetBehaviour<HPHandler>();
+            if (hp == null || hp.IsDead) continue;
+
+            float d = Vector3.Distance(transform.position, pObj.transform.position);
+            if (d < closestDist)
             {
-                float d = Vector3.Distance(transform.position, pObj.transform.position);
-                if (d < closestDist)
-                {
-                    closestDist = d;
-                    playerTarget = pObj;
-                }
+                closestDist = d;
+                nearest = pObj;
             }
         }
+
+        // Gán một lần duy nhất sau loop
+        playerTarget = nearest; // null nếu không tìm được ai
     }
-   
+
 
     // --- ĐỒNG BỘ HIỆU ỨNG (RPC) ---
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    private void RPC_PlayAttackEffects() { if (animator) animator.Play("Attack"); }
+    private void RPC_PlayAttackAnim() { if (animator) animator.Play("Attack"); }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_PlayHitEffects() { if (animator) animator.Play("GetHit"); }
@@ -289,7 +311,6 @@ public class EnemyAI : NetworkBehaviour, ITakeDamageable
         switch (currentState)
         {
             case EnemyState.Idle:
-                animator.Play("Idle");
                 break;
             case EnemyState.Patrol:
                 animator.Play("Walk");
@@ -298,6 +319,7 @@ public class EnemyAI : NetworkBehaviour, ITakeDamageable
                 animator.Play("Run");
                 break;                       
             case EnemyState.Die:
+                enemyHealth.Invisible();
                 animator.Play("Die");
                 break;
         }
@@ -306,6 +328,12 @@ public class EnemyAI : NetworkBehaviour, ITakeDamageable
     {
         if (enemyHealth)
             enemyHealth.UpdateHP(health, maxHealth);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 }
 

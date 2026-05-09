@@ -14,7 +14,6 @@ public class JumpStart : IState
 
     public void Execute(float tick)
     {
-        Debug.Log(ctx.controller.Velocity);
         if(ctx.controller.Velocity.y <= 0f && !ctx.controller.Grounded)
         {
             ctx.ChangeMovementState(nameof(Fall));

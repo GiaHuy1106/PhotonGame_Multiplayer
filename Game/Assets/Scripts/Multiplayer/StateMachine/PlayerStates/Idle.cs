@@ -9,7 +9,6 @@ public class Idle : IState
     }
     public void Enter()
     {
-        Debug.Log("Enter Idle");
     }
 
     public void Execute(float tick)

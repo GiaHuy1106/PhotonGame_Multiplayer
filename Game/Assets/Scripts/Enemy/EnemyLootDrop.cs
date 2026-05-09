@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class EnemyLootDrop : MonoBehaviour
+public class EnemyLootDrop : MonoBehaviour// Chưa sử dụng
 {
     [Header("Loot Data")]
     public MonsterData monsterData;

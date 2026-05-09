@@ -1556,6 +1556,7 @@ GameObject:
   - component: {fileID: 788529414381065403}
   - component: {fileID: 6159751732104699421}
   - component: {fileID: 7957571693977315663}
+  - component: {fileID: 6878402689393727845}
   m_Layer: 6
   m_Name: PurpleDragon
   m_TagString: Enemy
@@ -1655,6 +1656,7 @@ MonoBehaviour:
   getHitDuration: 0.5
   TimeToDie: 5
   enemyHealth: {fileID: 7957571693977315663}
+  agent: {fileID: 0}
 --- !u!54 &5633429262273699543
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1875,6 +1877,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 2721609224563093068}
   - {fileID: 2341231622820594644}
+  - {fileID: 6878402689393727845}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &6159751732104699421
 MonoBehaviour:
@@ -1909,6 +1912,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
   healthBar: {fileID: 5259545438125034755}
+--- !u!114 &6878402689393727845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 174418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkTransform
+  _stateAuthorityChangeErrorCorrectionDelta: 0
+  SyncScale: 0
+  SyncParent: 0
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 0
 --- !u!1 &176574
 GameObject:
   m_ObjectHideFlags: 0

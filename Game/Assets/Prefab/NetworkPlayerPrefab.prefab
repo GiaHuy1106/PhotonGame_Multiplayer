@@ -105,8 +105,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 661669616508931391}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.15212339, y: 0, z: 0, w: 0.98836154}
-  m_LocalPosition: {x: 0, y: 1.5035291, z: -4.7685847}
+  m_LocalRotation: {x: 0.31421816, y: -0.04624913, z: 0.015327835, w: 0.94809973}
+  m_LocalPosition: {x: 0.390325, y: 2.9861903, z: -3.9912796}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -189,7 +189,7 @@ MonoBehaviour:
     SplineCurvature: 0.5
   RecenteringTarget: 2
   HorizontalAxis:
-    Value: 0
+    Value: -5.585449
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -199,7 +199,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   VerticalAxis:
-    Value: 17.5
+    Value: 36.672344
     Center: 17.5
     Range: {x: 8, y: 45}
     Wrap: 0
@@ -270,7 +270,7 @@ MonoBehaviour:
         LegacyInput: 
         LegacyGain: 1
         CancelDeltaTime: 0
-      InputValue: 0
+      InputValue: -0
       Driver:
         AccelTime: 0.2
         DecelTime: 0.2
@@ -283,7 +283,7 @@ MonoBehaviour:
         LegacyInput: 
         LegacyGain: 1
         CancelDeltaTime: 0
-      InputValue: 0
+      InputValue: -0
       Driver:
         AccelTime: 0
         DecelTime: 0
@@ -330,7 +330,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6429368871968535371}
-  - component: {fileID: 8916136034234226585}
   m_Layer: 0
   m_Name: PlayerHUD
   m_TagString: Untagged
@@ -358,20 +357,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -28.8}
   m_SizeDelta: {x: 199.99, y: 17.729998}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &8916136034234226585
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 801359521771909302}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13eff34c5842cd74a8eb903efbf90984, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealthUI
-  healthBar: {fileID: 6781844790641945321}
-  hPHandler: {fileID: 384819521324123475}
 --- !u!1 &892409575341412361
 GameObject:
   m_ObjectHideFlags: 0
@@ -1684,7 +1669,8 @@ GameObject:
   - component: {fileID: 384819521324123475}
   - component: {fileID: 2852310641497341993}
   - component: {fileID: -4047113029586358021}
-  m_Layer: 0
+  - component: {fileID: 2832221565384795534}
+  m_Layer: 7
   m_Name: NetworkPlayerPrefab
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -1727,7 +1713,6 @@ MonoBehaviour:
   controller: {fileID: 6446823612746033855}
   hphandler: {fileID: 384819521324123475}
   text: {fileID: 557472499306031635}
-  armor: 10
   _locomotionState: 0
   _combatState: 3
   _IsAttacking: 0
@@ -1784,7 +1769,7 @@ CharacterController:
   m_Radius: 0.38
   m_SlopeLimit: 45
   m_StepOffset: 0.2
-  m_SkinWidth: 0.0001
+  m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0.75, z: 0}
 --- !u!114 &6446823612746033855
@@ -1851,7 +1836,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HPHandler
   maxHP: 100
-  healthUI: {fileID: 0}
+  healthBar: {fileID: 6781844790641945321}
   _HP: 0
   _IsDead:
     _value: 0
@@ -1872,6 +1857,7 @@ MonoBehaviour:
   Offset: {x: 0, y: 0.97, z: 0.37}
   GizmosColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   Hitboxes:
+  - {fileID: 2832221565384795534}
   - {fileID: 7434219604124244659}
 --- !u!114 &-4047113029586358021
 MonoBehaviour:
@@ -1885,10 +1871,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8611ceedb4f01034aaff7e5b2ef8ba7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInteract
-  interactDistance: 3
   interactLayer:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &2832221565384795534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4147965920716094726}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1014831617, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.Hitbox
+  Type: 3
+  SphereRadius: 0
+  CapsuleRadius: 0.5
+  BoxExtents: {x: 0, y: 0, z: 0}
+  CapsuleExtents: 1.84
+  Offset: {x: 0, y: 0.8, z: 0}
+  Root: {fileID: 2852310641497341993}
+  GizmosColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!1 &4328153128752024176
 GameObject:
   m_ObjectHideFlags: 0
@@ -3512,8 +3517,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7371162278396873387}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.15212339, y: 0, z: 0, w: 0.98836154}
-  m_LocalPosition: {x: 0, y: 1.5035291, z: -4.7685847}
+  m_LocalRotation: {x: 0.31421816, y: -0.04624913, z: 0.015327835, w: 0.94809973}
+  m_LocalPosition: {x: 0.390325, y: 2.9861903, z: -3.9912796}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

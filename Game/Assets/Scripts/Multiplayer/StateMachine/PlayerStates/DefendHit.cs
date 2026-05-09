@@ -7,13 +7,22 @@ public class DefendHit : IState
     {
         this.ctx = ctx;
     }
+    Animator animator;
     public void Enter()
     {
-        Debug.Log("Enter defend hit ");
+        if(animator == null)
+        {
+            animator = ctx.anim.GetAnimator();
+        }
     }
 
     public void Execute(float tick)
     {
+        var stateInfo = animator.GetCurrentAnimatorStateInfo(1);
+        if (stateInfo.IsName(nameof(DefendHit)) && stateInfo.normalizedTime >= .95f)
+        {
+            ctx.ChangeCombatState(nameof(NoneState));
+        }
     }
 
     public void Exit()

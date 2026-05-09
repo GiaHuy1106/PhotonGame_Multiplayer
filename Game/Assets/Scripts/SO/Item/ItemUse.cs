@@ -1,7 +1,7 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
-public class ItemUse : MonoBehaviour
+public class ItemUse : MonoBehaviour // Chưa sử dụng
 {
     [SerializeField] private ItemData itemData;
     public Inventory inventory;

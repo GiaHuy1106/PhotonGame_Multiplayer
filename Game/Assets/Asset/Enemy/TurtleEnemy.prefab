@@ -533,6 +533,7 @@ GameObject:
   - component: {fileID: 7132861057594747703}
   - component: {fileID: 5245537042353048492}
   - component: {fileID: 5881057448806020929}
+  - component: {fileID: 7493823820898300012}
   m_Layer: 6
   m_Name: TurtleEnemy
   m_TagString: Enemy
@@ -632,6 +633,7 @@ MonoBehaviour:
   getHitDuration: 1
   TimeToDie: 5
   enemyHealth: {fileID: 5881057448806020929}
+  agent: {fileID: 0}
 --- !u!136 &8029822085060225533
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -854,6 +856,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 1139331841368143344}
   - {fileID: 5180768010365074167}
+  - {fileID: 7493823820898300012}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &5245537042353048492
 MonoBehaviour:
@@ -888,6 +891,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
   healthBar: {fileID: 5920401469403404133}
+--- !u!114 &7493823820898300012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1524411113276028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkTransform
+  _stateAuthorityChangeErrorCorrectionDelta: 0
+  SyncScale: 0
+  SyncParent: 0
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 0
 --- !u!1 &1532652994627396
 GameObject:
   m_ObjectHideFlags: 0

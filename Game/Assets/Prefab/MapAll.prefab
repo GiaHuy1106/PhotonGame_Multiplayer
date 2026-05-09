@@ -605,6 +605,7 @@ GameObject:
   - component: {fileID: 4231548446139488472}
   - component: {fileID: 7932358686249646003}
   - component: {fileID: 7889128494328955710}
+  - component: {fileID: 2654118793700325059}
   m_Layer: 0
   m_Name: Lever_03
   m_TagString: Untagged
@@ -751,6 +752,25 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.437535, y: 2, z: 1.6915283}
   m_Center: {x: 0.00000035762787, y: 0, z: 0.5}
+--- !u!114 &2654118793700325059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2396192321363162915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ec03f9998f201149b61dbbc66808ea8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DoorNetwork
+  floatingText: {fileID: 7296421932696977765}
+  doorOpen: {fileID: 0}
+  _IsOpen: 0
+  box: {fileID: 0}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &2396790023991681282
 GameObject:
   m_ObjectHideFlags: 0
@@ -1900,6 +1920,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DoorNetwork
   floatingText: {fileID: 4364654912110572504}
   doorOpen: {fileID: 0}
+  _IsOpen: 0
+  box: {fileID: 0}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &6031122336517473139
 GameObject:
   m_ObjectHideFlags: 0
@@ -3059,6 +3084,9 @@ GameObject:
   - component: {fileID: 4710162905343380417}
   - component: {fileID: 1197612610007373461}
   - component: {fileID: 8761555290609874989}
+  - component: {fileID: 2503782771996834179}
+  - component: {fileID: 8763740502445544007}
+  - component: {fileID: 904913676744942389}
   m_Layer: 0
   m_Name: Lever_02
   m_TagString: Untagged
@@ -3162,6 +3190,65 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 1221633221682130131, guid: 47002118913e5e44b98e015902771975, type: 3}
+--- !u!65 &2503782771996834179
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9147372133134447244}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.4375348, y: 0.28803676, z: 1.6915276}
+  m_Center: {x: 0.0000005364418, y: 0.14401838, z: 0.49999994}
+--- !u!114 &8763740502445544007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9147372133134447244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ec03f9998f201149b61dbbc66808ea8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DoorNetwork
+  floatingText: {fileID: 9054865788601104607}
+  doorOpen: {fileID: 0}
+  _IsOpen: 0
+  box: {fileID: 2503782771996834179}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 0
+--- !u!114 &904913676744942389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9147372133134447244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
+  SortKey: 2212396758
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 0}
+  ForceRemoteRenderTimeframe: 0
 --- !u!1001 &28177311331576980
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Fusion;
 using TMPro;
 using UnityEngine;
@@ -55,13 +55,30 @@ public class NetworkPlayer : NetworkBehaviour, ITakeDamageable
            .AddState(nameof(Defend), new Defend(ctx))
            .AddState(nameof(Die), new Die(ctx))
            .AddState(nameof(NoneState), new NoneState(ctx))
+           .AddState(nameof(DefendHit), new DefendHit(ctx))
+           .AddState(nameof(GetHit), new GetHit(ctx))
            ;
         hphandler.OnDead += OnDeadHPHandler;
-
+        hphandler.OnHealthChanged += OnGetHit;
     }
+    void OnGetHit(float health, float maxhealth)
+    {
+        if (combatState == CombatState.Defend)
+        {
+            ctx.ChangeCombatState(nameof(DefendHit));
+        }
+        else
+        {
+            ctx.ChangeMovementState(nameof(GetHit));
+        }
+    }
+
     void OnDeadHPHandler()
     {
-        ctx.ChangeMovementState(nameof(Die));
+        //ctx.ChangeCombatState(nameof(NoneState));
+        //ctx.ChangeMovementState(nameof(Die));
+        animator.Play(nameof(NoneState), 1);
+        animator.Play(nameof(Die), 0);
     }
     public override void Spawned()
     {
@@ -113,7 +130,6 @@ public class NetworkPlayer : NetworkBehaviour, ITakeDamageable
             }
             if (inputData.isAttack && IsAttacking == false)
             {
-                TakeDamage(5f); // test takedamage
                 ctx.ChangeCombatState(nameof(Attack01));
                 IsAttacking = true;
             }
@@ -157,10 +173,7 @@ public class NetworkPlayer : NetworkBehaviour, ITakeDamageable
                 break;
             case LocomotionState.Die:
                 ctx.anim.PlayClip(PlayerAnimatorController.DIE_HASH);
-                break;
-            case LocomotionState.DefendHit:
-                ctx.anim.PlayClip(PlayerAnimatorController.DEFEND_HASH);
-                break;
+                break;            
             case LocomotionState.GetHit:
                 ctx.anim.PlayClip(PlayerAnimatorController.GETHIT_HASH);
                 break;
@@ -186,6 +199,9 @@ public class NetworkPlayer : NetworkBehaviour, ITakeDamageable
                 ctx.anim.PlayClip(PlayerAnimatorController.ATTACK02_HASH, 1);
                 break;
             case CombatState.Defend:
+                ctx.anim.PlayClip(PlayerAnimatorController.DEFEND_HASH, 1);
+                break;
+            case CombatState.DefendHit:
                 ctx.anim.PlayClip(PlayerAnimatorController.DEFEND_HASH, 1);
                 break;
             default:
@@ -238,6 +254,12 @@ public class NetworkPlayer : NetworkBehaviour, ITakeDamageable
 
     public void TakeDamage(float damage)
     {
+        if (!HasStateAuthority) return;
+        if (combatState == CombatState.Defend)
+        {
+            damage -= 5f;
+            //ChangeDefendHit          
+        }        
         hphandler.TakeDamage(damage);
     }
 

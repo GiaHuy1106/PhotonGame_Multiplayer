@@ -10,7 +10,6 @@ public class Attack02 : IState
     }
     public void Enter()
     {
-        Debug.Log("Enter Attack 2");
         if(anim == null)
         {
             anim = ctx.anim.GetAnimator();
