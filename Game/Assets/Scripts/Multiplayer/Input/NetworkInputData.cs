@@ -10,6 +10,7 @@ public struct NetworkInputData : INetworkInput
     public bool isAttack;
     public bool isLeftShift;
     public bool isDefend;
+    public bool isInteract;
    public void Reset()
     {
         direction = Vector2.zero;
@@ -19,6 +20,7 @@ public struct NetworkInputData : INetworkInput
         isJump = false;
         isLeftShift = false;
         isDefend = false;
+        isInteract = false;
     }
 
 }

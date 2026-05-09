@@ -9,9 +9,7 @@ public class JumpStart : IState
     }
     public void Enter()
     {
-        ctx.controller.Jump();
-        Debug.Log("Enter JumpStart");
-        Debug.Log("Velocity: " + ctx.controller.Velocity);
+        ctx.controller.Jump();      
     }
 
     public void Execute(float tick)

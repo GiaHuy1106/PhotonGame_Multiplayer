@@ -10,6 +10,7 @@ TagManager:
   - redPotion
   - bluePotion
   - greenPotion
+  - MainUI
   layers:
   - Default
   - TransparentFX
@@ -17,8 +18,8 @@ TagManager:
   - Ground
   - Water
   - UI
-  - 
-  - 
+  - Enemy
+  - Player
   - 
   - 
   - 

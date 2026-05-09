@@ -1,119 +1,154 @@
+﻿using System;
+using System.Collections.Generic;
+using Fusion;
+using Fusion.LagCompensation;
 using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class EnemyAI : MonoBehaviour
+public class EnemyAI : NetworkBehaviour, ITakeDamageable
 {
     public enum EnemyState { Idle, Patrol, Chasing, Attacking, GetHit, Die }
 
     [Header("State Control")]
-    public EnemyState currentState = EnemyState.Idle;
+    [Networked, OnChangedRender(nameof(OnStateChanged))]
+    public EnemyState currentState { get; set; } = EnemyState.Idle;
 
     [Header("Stats")]
-    public float health = 100f;
+    [SerializeField] float maxHealth = 100f;
+    [Networked, OnChangedRender(nameof(OnHealthChanged))]
+    public float health { get; set; }
+
+    [Networked] public bool IsDead { get; set; }
+
     public float walkSpeed = 2f;
     public float chaseSpeed = 5f;
 
     [Header("Patrol Settings")]
     public Transform[] waypoints;
     public float waitTimeAtWaypoint = 2f;
-    private int currentWaypointIndex = 0;
-    private float waitTimer = 0f;
+    [Networked] private int currentWaypointIndex { get; set; }
+    [Networked] private TickTimer waitTimer { get; set; }
 
     [Header("Detection & Combat")]
     public float detectionRange = 10f;
     public float attackRange = 2f;
     public float attackCooldown = 2f;
-    private float lastAttackTime = 0f;
+    public float damage = 5f;
+    public LayerMask layerDamage;
+    [Networked] private TickTimer attackCooldownTimer { get; set; }
 
-    [Header("Animation Settings")]
+    [Header("Timers")]
     public float getHitDuration = 0.5f;
-    private float hitTimer = 0f;
+    [Networked] private TickTimer hitStateTimer { get; set; }
+    public float TimeToDie = 3f;
+    [Networked] private TickTimer despawnTimer { get; set; }
 
-    private Transform playerTarget;
-    private NavMeshAgent agent;
+    [Header("References")]
+    public EnemyHealth enemyHealth;
+    [SerializeField] NavMeshAgent agent;
     private Animator animator;
-    public float TimeToDie = 5f; 
-    [Header("Loot Drop")]
     private EnemyLootDrop lootDrop;
-    void Start()
+    private EnemyFX enemyFX;
+    List<LagCompensatedHit> hits = new();
+    public event Action OnEnemyDie;
+    // Trong Multiplayer, ta lưu ID hoặc tham chiếu thay vì GameObject.Find liên tục
+    [Networked] private NetworkObject playerTarget { get; set; }
+
+    private void Awake()
     {
-        agent = GetComponent<NavMeshAgent>();
-        animator = GetComponentInChildren<Animator>();
-        lootDrop = GetComponent<EnemyLootDrop>();
-        if (waypoints.Length > 0) currentState = EnemyState.Patrol;
+        if(agent == null)
+        {
+            agent = GetComponent<NavMeshAgent>();
+        }
+    }
+    public override void Spawned()
+    {
+        if (HasStateAuthority)
+        {
+            health = maxHealth;
+            if (waypoints.Length > 0) currentState = EnemyState.Patrol;
+        }
+        if (waypoints.Length == 0)
+        {
+            waypoints = GameManager.Ins.wayPoints;
+        }
     }
 
-    void Update()
+    public override void FixedUpdateNetwork()
     {
-        if (currentState == EnemyState.Die) return;
+        // 1. Kiểm tra nếu đã chết và chờ Despawn
+        if (IsDead)
+        {
+            if (despawnTimer.Expired(Runner) && HasStateAuthority)
+            {
+                Runner.Despawn(Object);
+            }
+            return;
+        }
 
-        FindPlayer();
-        if (playerTarget == null) return;
+        // 2. Chỉ Server (State Authority) mới xử lý AI Logic
+        if (HasStateAuthority)
+        {
+            UpdateAI();
+        }
+    }
 
-        float distanceToPlayer = Vector3.Distance(transform.position, playerTarget.position);
+    private void UpdateAI()
+    {
+        FindNearestPlayer();
+
+        float distanceToPlayer = playerTarget != null
+            ? Vector3.Distance(transform.position, playerTarget.transform.position)
+            : float.MaxValue;
 
         switch (currentState)
         {
-            case EnemyState.Idle:
-                HandleIdle(distanceToPlayer);
-                break;
-            case EnemyState.Patrol:
-                HandlePatrol(distanceToPlayer);
-                break;
-            case EnemyState.Chasing:
-                HandleChasing(distanceToPlayer);
-                break;
-            case EnemyState.Attacking:
-                HandleAttacking(distanceToPlayer);
-                break;
-            case EnemyState.GetHit:
-                HandleGetHitState();
-                break;
+            case EnemyState.Idle: HandleIdle(distanceToPlayer); break;
+            case EnemyState.Patrol: HandlePatrol(distanceToPlayer); break;
+            case EnemyState.Chasing: HandleChasing(distanceToPlayer); break;
+            case EnemyState.Attacking: HandleAttacking(distanceToPlayer); break;
+            case EnemyState.GetHit: HandleGetHitState(); break;
         }
-
-        UpdateAnimations();
     }
+
+    // --- LOGIC XỬ LÝ TRẠNG THÁI ---
 
     private void HandleIdle(float dist)
     {
-        agent.isStopped = true;
-
         if (dist <= detectionRange) currentState = EnemyState.Chasing;
         else if (waypoints.Length > 0) currentState = EnemyState.Patrol;
     }
 
     private void HandlePatrol(float dist)
     {
-        if (dist <= detectionRange)
-        {
-            currentState = EnemyState.Chasing;
-            return;
-        }
-
-        agent.isStopped = false;
-        agent.speed = walkSpeed;
+        if (dist <= detectionRange) { currentState = EnemyState.Chasing; return; }
 
         if (waypoints.Length == 0) return;
 
+        agent.isStopped = false;
+        agent.speed = walkSpeed;
         agent.SetDestination(waypoints[currentWaypointIndex].position);
 
         if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
         {
-            waitTimer += Time.deltaTime;
-            if (waitTimer >= waitTimeAtWaypoint)
+            if (waitTimer.IsRunning == false)
+                waitTimer = TickTimer.CreateFromSeconds(Runner, waitTimeAtWaypoint);
+
+            if (waitTimer.Expired(Runner))
             {
                 currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length;
-                waitTimer = 0f;
+                waitTimer = TickTimer.None; // Reset timer
             }
         }
     }
 
     private void HandleChasing(float dist)
     {
+        if (playerTarget == null) { currentState = EnemyState.Patrol; return; }
         agent.isStopped = false;
         agent.speed = chaseSpeed;
-        agent.SetDestination(playerTarget.position);
+        agent.SetDestination(playerTarget.transform.position);
 
         if (dist <= attackRange) currentState = EnemyState.Attacking;
         else if (dist > detectionRange) currentState = EnemyState.Patrol;
@@ -122,50 +157,68 @@ public class EnemyAI : MonoBehaviour
     private void HandleAttacking(float dist)
     {
         agent.isStopped = true;
-        FaceTarget();
 
-        if (Time.time >= lastAttackTime + attackCooldown)
-        {
-            if (animator != null) animator.SetTrigger("Attack");
-            lastAttackTime = Time.time;
-        }
-
-        if (dist > attackRange) currentState = EnemyState.Chasing;
-    }
-
-    public void TriggerAttackDamage()
-    {
+        // Quay mặt về phía player
         if (playerTarget != null)
         {
-            float dist = Vector3.Distance(transform.position, playerTarget.position);
-            if (dist <= attackRange + 0.5f)
+            Vector3 dir = (playerTarget.transform.position - transform.position).normalized;
+            dir.y = 0;
+            if (dir != Vector3.zero) transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), Runner.DeltaTime * 5f);
+        }
+
+        if (attackCooldownTimer.ExpiredOrNotRunning(Runner))
+        {
+            // Trigger Animation qua RPC hoặc Networked Var (ở đây dùng Trigger cho đơn giản)
+            var queryParams = new SphereOverlapQueryParams { 
+                Center = transform.position,
+                Radius = attackRange,              
+            };
+
+            SphereOverlapQuery query = new SphereOverlapQuery(ref queryParams);
+            query.Options = HitOptions.IncludePhysX;
+            query.LayerMask = layerDamage;
+            int hitCount = Runner.LagCompensation.OverlapSphere(
+             query, hits
+         );
+            if (hits.Count > 0 )
             {
-                PlayerHealth pHealth = playerTarget.GetComponent<PlayerHealth>();
-                if (pHealth != null)
+                foreach (var hit in hits)
                 {
-                    pHealth.TakeDamage(10f);
-                    Vector3 hitPoint = playerTarget.position + Vector3.up * 1f;
-                    GetComponent<EnemyFX>().SpawnHitVFX(hitPoint);
-                    GetComponent<EnemyFX>().PlayHitSound();
+                    NetworkObject obj = null;
+                    if (hit.Hitbox != null)
+                    {
+                        obj = hit.GameObject.GetComponent<NetworkObject>();
+                    }else if (hit.Collider != null)
+                    {
+                        obj = hit.GameObject.GetComponent<NetworkObject>();
+                    }
+                    if(obj != null && obj.TryGetComponent<ITakeDamageable>(out var takeDamageOBJ))
+                    {
+                        takeDamageOBJ.TakeDamage(damage);
+                    }
                 }
             }
+            RPC_PlayAttackEffects();
+            attackCooldownTimer = TickTimer.CreateFromSeconds(Runner, attackCooldown);
         }
+
+        if (dist > attackRange + 0.5f) currentState = EnemyState.Chasing;
     }
 
     private void HandleGetHitState()
     {
         agent.isStopped = true;
-
-        hitTimer -= Time.deltaTime;
-        if (hitTimer <= 0)
+        if (hitStateTimer.Expired(Runner))
         {
             currentState = EnemyState.Chasing;
         }
     }
 
+    // --- HỆ THỐNG GÂY SÁT THƯƠNG ---
+
     public void TakeDamage(float damage)
     {
-        if (currentState == EnemyState.Die) return;
+        if (IsDead || !HasStateAuthority) return;
 
         health -= damage;
 
@@ -175,66 +228,85 @@ public class EnemyAI : MonoBehaviour
         }
         else
         {
-            if (animator != null) animator.ResetTrigger("Attack");
-            if (animator != null) animator.SetTrigger("GetHit");
-            GetComponent<EnemyFX>().PlayGetHitSound();
+            
             currentState = EnemyState.GetHit;
-            hitTimer = getHitDuration;
+            hitStateTimer = TickTimer.CreateFromSeconds(Runner, getHitDuration);
+            RPC_PlayHitEffects();
         }
     }
 
     private void Die()
     {
-        Collider mainCollider = GetComponent<Collider>();
-        if (mainCollider != null)
-        {
-            mainCollider.enabled = false;
-        }
+        IsDead = true;
         currentState = EnemyState.Die;
-        agent.isStopped = true;
+        despawnTimer = TickTimer.CreateFromSeconds(Runner, TimeToDie);
+        OnEnemyDie?.Invoke();
+        // Tắt vật lý trên Server
         agent.enabled = false;
+        if (TryGetComponent<Collider>(out var c)) c.enabled = false;
 
-        if (animator != null) animator.SetTrigger("Die");
-        if (lootDrop != null)
-        {
-            lootDrop.DropLoot();
-        }
-        GetComponent<EnemyFX>().PlayDieSound();
-        Destroy(gameObject, TimeToDie);
+        if (lootDrop != null) lootDrop.DropLoot();
     }
 
-    private void FindPlayer()
+    // --- HELPER FUNCTIONS ---
+
+    private void FindNearestPlayer()
     {
-        if (playerTarget == null)
+        // Tối ưu: Chỉ tìm kiếm mỗi giây một lần thay vì mỗi tick
+        if (Runner.Tick % 30 != 0 && playerTarget != null) return;
+
+        float closestDist = float.MaxValue;
+        foreach (var player in Runner.ActivePlayers)
         {
-            GameObject p = GameObject.FindGameObjectWithTag("Player");
-            if (p != null) playerTarget = p.transform;
+            var pObj = Runner.GetPlayerObject(player);
+            if (pObj != null)
+            {
+                float d = Vector3.Distance(transform.position, pObj.transform.position);
+                if (d < closestDist)
+                {
+                    closestDist = d;
+                    playerTarget = pObj;
+                }
+            }
         }
     }
+   
 
-    private void FaceTarget()
-    {
-        Vector3 direction = (playerTarget.position - transform.position).normalized;
-        direction.y = 0;
-        if (direction != Vector3.zero)
-        {
-            Quaternion lookRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
-        }
-    }
+    // --- ĐỒNG BỘ HIỆU ỨNG (RPC) ---
 
-    private void UpdateAnimations()
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_PlayAttackEffects() { if (animator) animator.Play("Attack"); }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_PlayHitEffects() { if (animator) animator.Play("GetHit"); }
+   
+
+    // --- ON CHANGED CALLBACKS ---  
+    void OnStateChanged()
     {
         if (animator == null) return;
-        float speedMagnitude = agent.velocity.magnitude;
-        animator.SetFloat("Speed", speedMagnitude, 0.1f, Time.deltaTime);
-    }
 
-    private void OnDrawGizmosSelected()
+        switch (currentState)
+        {
+            case EnemyState.Idle:
+                animator.Play("Idle");
+                break;
+            case EnemyState.Patrol:
+                animator.Play("Walk");
+                break;
+            case EnemyState.Chasing:
+                animator.Play("Run");
+                break;                       
+            case EnemyState.Die:
+                animator.Play("Die");
+                break;
+        }
+    }
+    void OnHealthChanged()
     {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, detectionRange);
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackRange);
+        if (enemyHealth)
+            enemyHealth.UpdateHP(health, maxHealth);
     }
 }
+
+

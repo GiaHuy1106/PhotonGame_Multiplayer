@@ -3,7 +3,7 @@ using UnityEngine;
 public class PlayerCollision : MonoBehaviour
 {
     public PlayerMovement playerMovement;
-    public PlayerHealth playerHealth;
+    //public PlayerHealth playerHealth;
 
     private float hitCooldown = 0.3f; // ✅ NOTE: thêm cooldown
     private float hitTimer = 0f;
@@ -19,7 +19,7 @@ public class PlayerCollision : MonoBehaviour
 
         if(hit.gameObject.CompareTag("Axe") || hit.gameObject.CompareTag("Blade"))
         {
-            playerHealth.TakeDamage(15);
+            //playerHealth.TakeDamage(15);
 
             playerMovement.ApplyKnockback(hit.transform.position);
 

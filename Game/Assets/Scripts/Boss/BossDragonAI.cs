@@ -1,9 +1,10 @@
+using Fusion;
 using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(BossDragonStats))]
-public class BossDragonAI : MonoBehaviour
+public class BossDragonAI : NetworkBehaviour
 {
     public enum BossState { Idle, Chasing, Attacking, GetHit, Die }
 
@@ -178,14 +179,14 @@ public class BossDragonAI : MonoBehaviour
             float dist = Vector3.Distance(transform.position, playerTarget.position);
             if (dist <= meleeRange + 1f)
             {
-                PlayerHealth pHealth = playerTarget.GetComponent<PlayerHealth>();
-                if (pHealth != null)
-                {
-                    pHealth.TakeDamage(stats.damage);
-                    Vector3 hitPoint = playerTarget.position + Vector3.up * 1f;
-                    GetComponent<EnemyFX>().SpawnHitVFX(hitPoint);
-                    GetComponent<EnemyFX>().PlayDragonClaw();
-                }
+                //PlayerHealth pHealth = playerTarget.GetComponent<PlayerHealth>();
+                //if (pHealth != null)
+                //{
+                //    pHealth.TakeDamage(stats.damage);
+                //    Vector3 hitPoint = playerTarget.position + Vector3.up * 1f;
+                //    GetComponent<EnemyFX>().SpawnHitVFX(hitPoint);
+                //    GetComponent<EnemyFX>().PlayDragonClaw();
+                //}
             }
         }
     }

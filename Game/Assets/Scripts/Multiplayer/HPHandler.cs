@@ -5,15 +5,15 @@ using UnityEngine;
 public class HPHandler : NetworkBehaviour
 {
     [Header("Settings")]
-    [SerializeField] private int maxHP = 100;
-
+    [SerializeField] private float maxHP = 100;
+    [SerializeField] PlayerHealthUI healthUI;
     [Networked, OnChangedRender(nameof(OnHPChanged))]
-    public int HP { get; private set; }
+    public float HP { get; private set; }
 
     [Networked]
     public NetworkBool IsDead { get; private set; }
 
-    public event Action<int, int> OnHealthChanged;
+    public event Action<float, float> OnHealthChanged;
     public event Action OnDead;
 
     public override void Spawned()
@@ -41,7 +41,7 @@ public class HPHandler : NetworkBehaviour
         HP = Mathf.Clamp(HP + amount, 0, maxHP);
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
         if (!Object.HasStateAuthority)
             return;
@@ -88,6 +88,6 @@ public class HPHandler : NetworkBehaviour
 
     public float GetHPRatio()
     {
-        return (float)HP / maxHP;
+        return HP / maxHP;
     }
 }

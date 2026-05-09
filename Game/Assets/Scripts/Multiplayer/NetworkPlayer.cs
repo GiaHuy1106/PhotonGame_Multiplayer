@@ -3,7 +3,7 @@ using Fusion;
 using TMPro;
 using UnityEngine;
 
-public class NetworkPlayer : NetworkBehaviour
+public class NetworkPlayer : NetworkBehaviour, ITakeDamageable
 {
 
     [SerializeField] Transform _camera;
@@ -33,6 +33,7 @@ public class NetworkPlayer : NetworkBehaviour
         text.text = nickName.ToString();
     }
 
+
     private void Awake()
     {
         Debug.Log("NetworkPlayer Awake");
@@ -55,8 +56,12 @@ public class NetworkPlayer : NetworkBehaviour
            .AddState(nameof(Die), new Die(ctx))
            .AddState(nameof(NoneState), new NoneState(ctx))
            ;
+        hphandler.OnDead += OnDeadHPHandler;
 
-
+    }
+    void OnDeadHPHandler()
+    {
+        ctx.ChangeMovementState(nameof(Die));
     }
     public override void Spawned()
     {
@@ -106,19 +111,20 @@ public class NetworkPlayer : NetworkBehaviour
             {
                 ctx.ChangeMovementState(nameof(JumpStart));
             }
-            Debug.Log("attacking: " + inputData.isAttack);
             if (inputData.isAttack && IsAttacking == false)
             {
-                Debug.Log("Attack");
+                TakeDamage(5f); // test takedamage
                 ctx.ChangeCombatState(nameof(Attack01));
                 IsAttacking = true;
             }
             if (inputData.isDefend)
             {
-                ctx.ChangeCombatState(nameof(Defend));
+                ctx.ChangeCombatState(nameof(Defend));               
             }
+            
             locomotion.Update(Runner.DeltaTime);
             combat.Update(Runner.DeltaTime);
+            CheckFallRespawn();
         }
         else
         {
@@ -206,7 +212,7 @@ public class NetworkPlayer : NetworkBehaviour
 
     void MoveHandle(NetworkInputData inputData)
     {
-        float maxSpeed = inputData.isLeftShift ? 12 : 15;
+        float maxSpeed = inputData.isLeftShift ? 8 : 10;
         float speed = inputData.isDefend ? maxSpeed * .7f : maxSpeed;
 
         controller.maxSpeed = speed;
@@ -230,4 +236,19 @@ public class NetworkPlayer : NetworkBehaviour
         animator.SetFloat("moveSpeed", movDir.magnitude);
     }
 
+    public void TakeDamage(float damage)
+    {
+        hphandler.TakeDamage(damage);
+    }
+
+    void CheckFallRespawn()
+    {
+        if(transform.position.y < -10f)
+        {
+            if (Object.HasStateAuthority && GameManager.Ins != null)
+            {
+                controller.Teleport(Utils.GetRandomAroundPoint(GameManager.Ins.SpawnPoint));
+            }
+        }
+    }
 }

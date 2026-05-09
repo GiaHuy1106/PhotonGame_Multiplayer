@@ -1,24 +1,35 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerHealthUI : MonoBehaviour
 {
     [Header("UI References")]
-    public Slider healthSlider;
-    public void SetupMaxHealth(float maxHealth)
+    public Image healthBar;
+    [SerializeField]
+    HPHandler hPHandler;
+
+
+    private void Awake()
     {
-        if (healthSlider != null)
+        if (hPHandler != null)
         {
-            healthSlider.maxValue = maxHealth;
-            healthSlider.value = maxHealth;
+            hPHandler.OnHealthChanged += OnHealthChanged;
         }
     }
 
-    public void UpdateHealth(float currentHealth)
+    private void OnHealthChanged(float hP, float maxHP)
     {
-        if (healthSlider != null)
+        UpdateHealth(hP, maxHP);
+    }
+
+    
+
+    public void UpdateHealth(float currentHealth, float maxHealth)
+    {
+        if (healthBar != null)
         {
-            healthSlider.value = currentHealth;
+            healthBar.fillAmount = currentHealth/maxHealth;
         }
     }
 }

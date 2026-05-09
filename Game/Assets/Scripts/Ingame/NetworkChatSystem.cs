@@ -50,7 +50,7 @@ public class NetworkChatSystem : NetworkBehaviour, IPlayerLeft, IPlayerJoined
     public void OnGameMessageReceived(string message)
     {
         messageQueue.Enqueue(message);
-        if (messageQueue.Count > 4)
+        if (messageQueue.Count > 3)
         {
             messageQueue.Dequeue();
         }

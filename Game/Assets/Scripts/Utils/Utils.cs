@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using UnityEngine;
 
 public static class Utils 
@@ -13,13 +13,10 @@ public static class Utils
     {
         await Task.Yield();
         action?.Invoke();
-    }
-    public static Vector3 GetRandomPosition()
+    }   
+    public static Vector3 GetRandomAroundPoint(Vector3 point, float range = 1f)
     {
-        return new Vector3(UnityEngine.Random.Range(-10f, 10f), 1, UnityEngine.Random.Range(-10f, 10f));
-    }
-    public static Vector3 GetRandomArroundPoint(Vector3 point)
-    {
-        return new Vector3(UnityEngine.Random.Range(-5f, 5f) + point.x, point.y, UnityEngine.Random.Range(-5f, 5f) + point.z);
+        Vector2 randomCircle = UnityEngine.Random.insideUnitCircle * range;
+        return new Vector3(point.x + randomCircle.x, point.y, point.z + randomCircle.y);
     }
 }

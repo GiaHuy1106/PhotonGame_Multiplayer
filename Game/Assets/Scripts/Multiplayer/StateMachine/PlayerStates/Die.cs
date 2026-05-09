@@ -14,6 +14,7 @@ public class Die : IState
 
     public void Execute(float tick)
     {
+
     }
 
     public void Exit()

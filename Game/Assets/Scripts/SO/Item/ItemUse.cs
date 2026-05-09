@@ -105,14 +105,14 @@ public class ItemUse : MonoBehaviour
 
     private void ApplyRedPotion(GameObject targetPlayer)
     {
-        PlayerHealth health = targetPlayer.GetComponent<PlayerHealth>();
-        if (health == null)
-        {
-            Debug.LogWarning("ItemUse: PlayerHealth not found on target player.");
-            return;
-        }
+        //PlayerHealth health = targetPlayer.GetComponent<PlayerHealth>();
+        //if (health == null)
+        //{
+        //    Debug.LogWarning("ItemUse: PlayerHealth not found on target player.");
+        //    return;
+        //}
 
-        health.Heal(redHealAmount);
+        //health.Heal(redHealAmount);
         Debug.Log("ItemUse: Red Potion healed " + redHealAmount + " HP.");
     }
 
