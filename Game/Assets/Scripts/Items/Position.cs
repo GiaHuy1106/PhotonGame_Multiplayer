@@ -5,24 +5,34 @@ using Fusion.LagCompensation;
 using NUnit.Framework;
 using UnityEngine;
 
-public class DoorNetwork : NetworkBehaviour, IInteractable
+public class Posion : NetworkBehaviour, IInteractable
 {
     bool isPlayerNear;
-    [SerializeField] GameObject floatingText;
-    [SerializeField] Animator doorOpen;
-    [Networked, OnChangedRender(nameof(ChangeOpen))]
-    public bool IsOpen { get; set; }
-    [SerializeField]
-    BoxCollider box;
+    [SerializeField] float heal = 20f;
+    [SerializeField] GameObject pickupIcon;
+    [SerializeField] SphereCollider box;
     HashSet<NetworkObject> _objectsInZone = new HashSet<NetworkObject>();
     List<NetworkObject> hitsObject = new List<NetworkObject>();
     [SerializeField] LayerMask layerMask;
-
+    Transform root;
+    private void Awake()
+    {
+        root = pickupIcon.transform.parent;
+        
+    }
     public override void Spawned()
     {
-        floatingText.SetActive(false);   
+        pickupIcon.SetActive(false);
     }
 
+
+    private void Update()
+    {
+        if (Camera.main != null)
+        {
+          root.forward = Camera.main.transform.forward;
+        }
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -45,10 +55,9 @@ public class DoorNetwork : NetworkBehaviour, IInteractable
         if (Runner.Tick % 30 != 0 || Runner.IsResimulation) return;
 
         // Thay LagCompensation bằng Physics thường
-        var overlaps = Physics.OverlapBox(
+        var overlaps = Physics.OverlapSphere(
             box.bounds.center,
-            box.bounds.extents,
-            transform.rotation,
+            box.radius,
             layerMask
         );
 
@@ -75,44 +84,37 @@ public class DoorNetwork : NetworkBehaviour, IInteractable
     void RPC_HandlerExit(NetworkObject obj)
     {
         _objectsInZone.Remove(obj);
-        HandleExit(obj);        
+        HandleExit(obj);
     }
-    
 
 
-    private void HandleEnter(NetworkObject no) {
-            isPlayerNear = true;
-        if(no.HasInputAuthority)
-            floatingText.SetActive(true);
-        
-    }
-    private void HandleExit(NetworkObject no) 
+
+    private void HandleEnter(NetworkObject no)
     {
-            isPlayerNear = false;
-     
-        if(no.HasInputAuthority)
-        {
-            floatingText.SetActive(false);
-        }
-    }
+        isPlayerNear = true;
+        if (no.HasInputAuthority)
+            pickupIcon.SetActive(true);
 
-    void ChangeOpen()
-    {
-        if (IsOpen)
-        {
-            if (HasStateAuthority && GameManager.Ins != null)
-            {
-                GameManager.Ins.SpawndEnenmy();
-            }
-            doorOpen.SetTrigger("Open");
-        }
     }
+    private void HandleExit(NetworkObject no)
+    {
+        isPlayerNear = false;
+
+        if (no.HasInputAuthority)
+        {
+            pickupIcon.SetActive(false);
+        }
+    }   
 
     public void Interact(NetworkObject obj)
     {
-        if(isPlayerNear && Object.HasStateAuthority && !IsOpen)
+        if (isPlayerNear && Object.HasStateAuthority)
         {
-            IsOpen = true;
+            if (obj.TryGetBehaviour<HPHandler>(out var hpPlayer))
+            {
+                hpPlayer.Heal(heal);
+                Runner.Despawn(Object);
+            }
         }
 
     }

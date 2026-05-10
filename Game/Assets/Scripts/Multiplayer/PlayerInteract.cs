@@ -33,7 +33,7 @@ public class PlayerInteract : NetworkBehaviour
             {
                 if (hit.TryGetComponent<IInteractable>(out var interactable))
                 {
-                    interactable.Interact();
+                    interactable.Interact(Object);
                 }
             }
         }

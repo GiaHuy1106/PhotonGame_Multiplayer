@@ -1,6 +1,7 @@
+using Fusion;
 using UnityEngine;
 
 public interface IInteractable 
 {
-   void Interact();
+    void Interact(NetworkObject obj);
 }
