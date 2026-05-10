@@ -10,53 +10,53 @@ public class FireColumnDamage : MonoBehaviour
     public GameObject burningVFXPrefab;
     public float burnDuration = 4f;
     public Vector3 vfxOffset = new Vector3(0, 0f, 0);
-    private Dictionary<PlayerHealth, float> targetTimers = new Dictionary<PlayerHealth, float>();
-    private List<PlayerHealth> keysBuffer = new List<PlayerHealth>();
+    //private Dictionary<PlayerHealth, float> targetTimers = new Dictionary<PlayerHealth, float>();
+    //private List<PlayerHealth> keysBuffer = new List<PlayerHealth>();
     private void OnDisable()
     {
-        targetTimers.Clear();
+        //targetTimers.Clear();
     }
 
     private void Update()
     {
-        List<PlayerHealth> targetsToRemove = new List<PlayerHealth>();
-        foreach (KeyValuePair<PlayerHealth, float> target in targetTimers)
-        {
-            float newTimer = target.Value + Time.deltaTime;
+        //List<PlayerHealth> targetsToRemove = new List<PlayerHealth>();
+        //foreach (KeyValuePair<PlayerHealth, float> target in targetTimers)
+        //{
+        //    float newTimer = target.Value + Time.deltaTime;
 
-            if (newTimer >= tickInterval)
-            {
-                if (target.Key != null)
-                {
-                    target.Key.TakeDamage(damagePerTick);
-                }
-                newTimer = 0f;
-            }
-            targetsToRemove.Add(target.Key);
-        }
+        //    if (newTimer >= tickInterval)
+        //    {
+        //        if (target.Key != null)
+        //        {
+        //            target.Key.TakeDamage(damagePerTick);
+        //        }
+        //        newTimer = 0f;
+        //    }
+        //    targetsToRemove.Add(target.Key);
+        //}
     }
 
     private void EfficientUpdate()
     {
-        keysBuffer.Clear();
-        keysBuffer.AddRange(targetTimers.Keys); 
+        //keysBuffer.Clear();
+        //keysBuffer.AddRange(targetTimers.Keys); 
 
-        for (int i = 0; i < keysBuffer.Count; i++)
-        {
-            PlayerHealth player = keysBuffer[i];
-            if (player == null) 
-            { 
-                targetTimers.Remove(player); 
-                continue; 
-            }
+        //for (int i = 0; i < keysBuffer.Count; i++)
+        //{
+        //    PlayerHealth player = keysBuffer[i];
+        //    if (player == null) 
+        //    { 
+        //        targetTimers.Remove(player); 
+        //        continue; 
+        //    }
 
-            targetTimers[player] += Time.deltaTime;
-            if (targetTimers[player] >= tickInterval)
-            {
-                player.TakeDamage(damagePerTick);
-                targetTimers[player] = 0f;
-            }
-        }
+        //    targetTimers[player] += Time.deltaTime;
+        //    if (targetTimers[player] >= tickInterval)
+        //    {
+        //        player.TakeDamage(damagePerTick);
+        //        targetTimers[player] = 0f;
+        //    }
+        //}
     }
     void LateUpdate()
     {
@@ -64,16 +64,16 @@ public class FireColumnDamage : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
-            PlayerHealth player = other.GetComponent<PlayerHealth>();
-            if (player != null && !targetTimers.ContainsKey(player))
-            {
-                targetTimers.Add(player, 0f);
-                player.TakeDamage(damagePerTick);
-                ApplyBurnVisual(other.gameObject);
-            }
-        }
+        //if (other.CompareTag("Player"))
+        //{
+        //    PlayerHealth player = other.GetComponent<PlayerHealth>();
+        //    if (player != null && !targetTimers.ContainsKey(player))
+        //    {
+        //        targetTimers.Add(player, 0f);
+        //        player.TakeDamage(damagePerTick);
+        //        ApplyBurnVisual(other.gameObject);
+        //    }
+        //}
     }
     private void ApplyBurnVisual(GameObject target)
     {
@@ -90,13 +90,13 @@ public class FireColumnDamage : MonoBehaviour
     }
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
-            PlayerHealth player = other.GetComponent<PlayerHealth>();
-            if (player != null && targetTimers.ContainsKey(player))
-            {
-                targetTimers.Remove(player);
-            }
-        }
+        //if (other.CompareTag("Player"))
+        //{
+        //    PlayerHealth player = other.GetComponent<PlayerHealth>();
+        //    if (player != null && targetTimers.ContainsKey(player))
+        //    {
+        //        targetTimers.Remove(player);
+        //    }
+        //}
     }
 }

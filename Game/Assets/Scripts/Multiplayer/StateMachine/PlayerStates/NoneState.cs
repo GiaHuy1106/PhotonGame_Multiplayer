@@ -9,7 +9,6 @@ public class NoneState : IState
     }
     public void Enter()
     {
-        Debug.Log("Enter NoneState");
     }
 
     public void Execute(float tick)

@@ -1,20 +1,30 @@
 using System;
 using Fusion;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HPHandler : NetworkBehaviour
 {
     [Header("Settings")]
-    [SerializeField] private int maxHP = 100;
-
+    [SerializeField] private float maxHP = 100f;
+    [SerializeField] Image healthBar;
     [Networked, OnChangedRender(nameof(OnHPChanged))]
-    public int HP { get; private set; }
+    public float HP { get; private set; }
 
     [Networked]
     public NetworkBool IsDead { get; private set; }
-
-    public event Action<int, int> OnHealthChanged;
+    Transform hpUI;
+    public event Action<float, float> OnHealthChanged;
     public event Action OnDead;
+    private void Awake()
+    {
+        hpUI = healthBar.transform.parent;
+    }
+    private void LateUpdate()
+    {      
+        if(Camera.main != null) 
+            hpUI.forward = Camera.main.transform.forward;        
+    }
 
     public override void Spawned()
     {
@@ -23,6 +33,7 @@ public class HPHandler : NetworkBehaviour
             HP = maxHP;
             IsDead = false;
         }
+        OnHPChanged();
     }
 
     public bool CanTakeDamage()
@@ -41,10 +52,8 @@ public class HPHandler : NetworkBehaviour
         HP = Mathf.Clamp(HP + amount, 0, maxHP);
     }
 
-    public void TakeDamage(int damage)
-    {
-        if (!Object.HasStateAuthority)
-            return;
+    public void TakeDamage(float damage)
+    {       
 
         if (IsDead)
             return;
@@ -82,12 +91,8 @@ public class HPHandler : NetworkBehaviour
     private void OnHPChanged()
     {
         OnHealthChanged?.Invoke(HP, maxHP);
-
-        Debug.Log($"HP Changed: {HP}/{maxHP}");
+        healthBar.fillAmount = HP / maxHP;
     }    
 
-    public float GetHPRatio()
-    {
-        return (float)HP / maxHP;
-    }
+  
 }

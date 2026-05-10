@@ -11,7 +11,6 @@ public class Move : IState
     public void Enter()
     {
 
-        Debug.Log("Enter MoveState");
        
         if (animator == null) {
             animator = ctx.anim.GetAnimator();

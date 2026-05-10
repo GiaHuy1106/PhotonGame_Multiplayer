@@ -1,9 +1,9 @@
-using System;
+﻿using System;
 using Fusion;
 using TMPro;
 using UnityEngine;
 
-public class NetworkPlayer : NetworkBehaviour
+public class NetworkPlayer : NetworkBehaviour, ITakeDamageable
 {
 
     [SerializeField] Transform _camera;
@@ -33,6 +33,7 @@ public class NetworkPlayer : NetworkBehaviour
         text.text = nickName.ToString();
     }
 
+
     private void Awake()
     {
         Debug.Log("NetworkPlayer Awake");
@@ -54,9 +55,30 @@ public class NetworkPlayer : NetworkBehaviour
            .AddState(nameof(Defend), new Defend(ctx))
            .AddState(nameof(Die), new Die(ctx))
            .AddState(nameof(NoneState), new NoneState(ctx))
+           .AddState(nameof(DefendHit), new DefendHit(ctx))
+           .AddState(nameof(GetHit), new GetHit(ctx))
            ;
+        hphandler.OnDead += OnDeadHPHandler;
+        hphandler.OnHealthChanged += OnGetHit;
+    }
+    void OnGetHit(float health, float maxhealth)
+    {
+        if (combatState == CombatState.Defend)
+        {
+            ctx.ChangeCombatState(nameof(DefendHit));
+        }
+        else
+        {
+            ctx.ChangeMovementState(nameof(GetHit));
+        }
+    }
 
-
+    void OnDeadHPHandler()
+    {
+        //ctx.ChangeCombatState(nameof(NoneState));
+        //ctx.ChangeMovementState(nameof(Die));
+        animator.Play(nameof(NoneState), 1);
+        animator.Play(nameof(Die), 0);
     }
     public override void Spawned()
     {
@@ -106,19 +128,19 @@ public class NetworkPlayer : NetworkBehaviour
             {
                 ctx.ChangeMovementState(nameof(JumpStart));
             }
-            Debug.Log("attacking: " + inputData.isAttack);
             if (inputData.isAttack && IsAttacking == false)
             {
-                Debug.Log("Attack");
                 ctx.ChangeCombatState(nameof(Attack01));
                 IsAttacking = true;
             }
             if (inputData.isDefend)
             {
-                ctx.ChangeCombatState(nameof(Defend));
+                ctx.ChangeCombatState(nameof(Defend));               
             }
+            
             locomotion.Update(Runner.DeltaTime);
             combat.Update(Runner.DeltaTime);
+            CheckFallRespawn();
         }
         else
         {
@@ -151,10 +173,7 @@ public class NetworkPlayer : NetworkBehaviour
                 break;
             case LocomotionState.Die:
                 ctx.anim.PlayClip(PlayerAnimatorController.DIE_HASH);
-                break;
-            case LocomotionState.DefendHit:
-                ctx.anim.PlayClip(PlayerAnimatorController.DEFEND_HASH);
-                break;
+                break;            
             case LocomotionState.GetHit:
                 ctx.anim.PlayClip(PlayerAnimatorController.GETHIT_HASH);
                 break;
@@ -182,6 +201,9 @@ public class NetworkPlayer : NetworkBehaviour
             case CombatState.Defend:
                 ctx.anim.PlayClip(PlayerAnimatorController.DEFEND_HASH, 1);
                 break;
+            case CombatState.DefendHit:
+                ctx.anim.PlayClip(PlayerAnimatorController.DEFEND_HASH, 1);
+                break;
             default:
                 break;
         }
@@ -206,7 +228,7 @@ public class NetworkPlayer : NetworkBehaviour
 
     void MoveHandle(NetworkInputData inputData)
     {
-        float maxSpeed = inputData.isLeftShift ? 12 : 15;
+        float maxSpeed = inputData.isLeftShift ? 8 : 10;
         float speed = inputData.isDefend ? maxSpeed * .7f : maxSpeed;
 
         controller.maxSpeed = speed;
@@ -230,4 +252,25 @@ public class NetworkPlayer : NetworkBehaviour
         animator.SetFloat("moveSpeed", movDir.magnitude);
     }
 
+    public void TakeDamage(float damage)
+    {
+        if (!HasStateAuthority) return;
+        if (combatState == CombatState.Defend)
+        {
+            damage -= 5f;
+            //ChangeDefendHit          
+        }        
+        hphandler.TakeDamage(damage);
+    }
+
+    void CheckFallRespawn()
+    {
+        if(transform.position.y < -10f)
+        {
+            if (Object.HasStateAuthority && GameManager.Ins != null)
+            {
+                controller.Teleport(Utils.GetRandomAroundPoint(GameManager.Ins.SpawnPoint));
+            }
+        }
+    }
 }

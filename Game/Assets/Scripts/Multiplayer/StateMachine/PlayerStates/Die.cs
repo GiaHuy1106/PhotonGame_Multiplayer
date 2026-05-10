@@ -9,11 +9,12 @@ public class Die : IState
     }
     public void Enter()
     {
-        Debug.Log("Enter Die");
+
     }
 
     public void Execute(float tick)
     {
+
     }
 
     public void Exit()

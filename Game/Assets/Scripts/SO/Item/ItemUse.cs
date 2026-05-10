@@ -1,7 +1,7 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
-public class ItemUse : MonoBehaviour
+public class ItemUse : MonoBehaviour // Chưa sử dụng
 {
     [SerializeField] private ItemData itemData;
     public Inventory inventory;
@@ -105,14 +105,14 @@ public class ItemUse : MonoBehaviour
 
     private void ApplyRedPotion(GameObject targetPlayer)
     {
-        PlayerHealth health = targetPlayer.GetComponent<PlayerHealth>();
-        if (health == null)
-        {
-            Debug.LogWarning("ItemUse: PlayerHealth not found on target player.");
-            return;
-        }
+        //PlayerHealth health = targetPlayer.GetComponent<PlayerHealth>();
+        //if (health == null)
+        //{
+        //    Debug.LogWarning("ItemUse: PlayerHealth not found on target player.");
+        //    return;
+        //}
 
-        health.Heal(redHealAmount);
+        //health.Heal(redHealAmount);
         Debug.Log("ItemUse: Red Potion healed " + redHealAmount + " HP.");
     }
 

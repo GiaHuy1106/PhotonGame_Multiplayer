@@ -7,8 +7,8 @@ public enum LocomotionState
    Fall,   
    Die,
    GetHit,
-   GetUp,
-   DefendHit
+   GetUp
+
 }
 public enum CombatState
 {
@@ -16,5 +16,6 @@ public enum CombatState
     Attack01,
     Attack02,
     Defend,
-    NoneState
+    NoneState,
+    DefendHit
 }

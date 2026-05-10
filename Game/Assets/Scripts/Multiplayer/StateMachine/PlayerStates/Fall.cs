@@ -9,7 +9,6 @@ public class Fall : IState
     }
     public void Enter()
     {
-        Debug.Log("Enter Fall");
     }
 
     public void Execute(float tick)

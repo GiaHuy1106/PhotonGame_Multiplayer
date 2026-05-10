@@ -11,6 +11,7 @@ public class CharacterInputHandler : MonoBehaviour
     bool isAttack = false;
     bool isLeftShift = false;
     bool isDefend = false;
+    bool isInteract = false;
     float rotationCamera;
     Vector2 pitchYaw = Vector2.zero;
     private void Awake()
@@ -37,6 +38,7 @@ public class CharacterInputHandler : MonoBehaviour
         direction.y = Input.GetAxisRaw("Vertical");
         isJump = Input.GetKeyDown(KeyCode.Space);
         isAttack = Input.GetMouseButtonDown(0);
+        isInteract = Input.GetKeyDown(KeyCode.E);
         isLeftShift = Input.GetKey(KeyCode.LeftShift);
         isDefend = Input.GetKey(KeyCode.F);
         rotationCamera = localCamera.eulerAngles.y;
@@ -50,6 +52,8 @@ public class CharacterInputHandler : MonoBehaviour
         inputData.isDefend = isDefend;
         inputData.isJump = isJump;
         inputData.isLeftShift = isLeftShift;
+        inputData.isInteract = isInteract;
+        isInteract = false;
         isAttack = false;
         isLeftShift = false;
         isDefend = false;

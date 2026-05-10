@@ -10,7 +10,6 @@ public class GetUp : IState
 
     public void Enter()
     {
-        Debug.Log("Enter GetUp");
     }
 
     public void Execute(float tick)

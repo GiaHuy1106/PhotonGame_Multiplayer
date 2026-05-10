@@ -9,14 +9,11 @@ public class JumpStart : IState
     }
     public void Enter()
     {
-        ctx.controller.Jump();
-        Debug.Log("Enter JumpStart");
-        Debug.Log("Velocity: " + ctx.controller.Velocity);
+        ctx.controller.Jump();      
     }
 
     public void Execute(float tick)
     {
-        Debug.Log(ctx.controller.Velocity);
         if(ctx.controller.Velocity.y <= 0f && !ctx.controller.Grounded)
         {
             ctx.ChangeMovementState(nameof(Fall));
