@@ -47,10 +47,9 @@ public class EnemyAI : NetworkBehaviour, ITakeDamageable
 
     [Header("References")]
     public EnemyHealth enemyHealth;
+    public Posion itemDrop;
     [SerializeField] NavMeshAgent agent;
     private Animator animator;
-    private EnemyLootDrop lootDrop;
-    private EnemyFX enemyFX;
     List<LagCompensatedHit> hits = new();
     public event Action OnEnemyDie;
     // Trong Multiplayer, ta lưu ID hoặc tham chiếu thay vì GameObject.Find liên tục
@@ -259,7 +258,11 @@ public class EnemyAI : NetworkBehaviour, ITakeDamageable
         agent.enabled = false;
         if (TryGetComponent<Collider>(out var c)) c.enabled = false;
 
-        if (lootDrop != null) lootDrop.DropLoot();
+        if (HasStateAuthority && UnityEngine.Random.Range(0f, 1f) <= .3f)
+        {
+            if(itemDrop != null)
+                Runner.Spawn(itemDrop, transform.position);
+        }
     }
 
     // --- HELPER FUNCTIONS ---

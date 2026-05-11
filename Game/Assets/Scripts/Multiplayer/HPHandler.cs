@@ -8,6 +8,7 @@ public class HPHandler : NetworkBehaviour
     [Header("Settings")]
     [SerializeField] private float maxHP = 100f;
     [SerializeField] Image healthBar;
+    [SerializeField] NetworkPlayer player;
     [Networked, OnChangedRender(nameof(OnHPChanged))]
     public float HP { get; private set; }
 
@@ -41,7 +42,7 @@ public class HPHandler : NetworkBehaviour
         return !IsDead;
     }
 
-    public void Heal(int amount)
+    public void Heal(float amount)
     {
         if (!Object.HasStateAuthority)
             return;
@@ -65,6 +66,7 @@ public class HPHandler : NetworkBehaviour
             HP = 0;
             Die();
         }
+        player.OnGetHit();
     }
 
     private void Die()

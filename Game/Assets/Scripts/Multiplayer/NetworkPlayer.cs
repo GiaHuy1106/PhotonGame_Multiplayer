@@ -59,10 +59,13 @@ public class NetworkPlayer : NetworkBehaviour, ITakeDamageable
            .AddState(nameof(GetHit), new GetHit(ctx))
            ;
         hphandler.OnDead += OnDeadHPHandler;
-        hphandler.OnHealthChanged += OnGetHit;
     }
-    void OnGetHit(float health, float maxhealth)
+    public void OnGetHit()
     {
+        if (hphandler.IsDead)
+        {
+            return;
+        }
         if (combatState == CombatState.Defend)
         {
             ctx.ChangeCombatState(nameof(DefendHit));

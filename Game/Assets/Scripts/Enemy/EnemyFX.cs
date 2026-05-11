@@ -16,9 +16,10 @@ public class EnemyFX : MonoBehaviour
     public AudioClip RoarSound; //tiếng gầm
     public AudioClip FireSound; //tiếng phun lửa
     public AudioClip DragonClaw;
-
+    
     [Header("Visual Effect")]
     public GameObject AttackHitEffect;
+    public Transform spawnHitVFX;
 
     public void Awake()
     {
@@ -32,7 +33,7 @@ public class EnemyFX : MonoBehaviour
     {
         if (WalkSound != null)
         {
-            audioSource.PlayOneShot(WalkSound,0.5f);
+            AudioSource.PlayClipAtPoint(WalkSound, transform.position, .5f);
         }
     }
 
@@ -40,8 +41,9 @@ public class EnemyFX : MonoBehaviour
     {
         if (hitSound != null)
         {
-            audioSource.PlayOneShot(hitSound);
+            AudioSource.PlayClipAtPoint(hitSound, transform.position);
         }
+        SpawnHitVFX(spawnHitVFX.position);
     }
 
     public void PlayDieSound()
@@ -62,7 +64,7 @@ public class EnemyFX : MonoBehaviour
     {
         if (GetHitSound != null)
         {
-            audioSource.PlayOneShot(GetHitSound);
+            AudioSource.PlayClipAtPoint(GetHitSound, transform.position);
         }
     }
     
@@ -71,6 +73,7 @@ public class EnemyFX : MonoBehaviour
         if (DragonBossGrawl != null)
         {
             audioSource.PlayOneShot(DragonBossGrawl);
+
         }
     }
 
@@ -93,7 +96,16 @@ public class EnemyFX : MonoBehaviour
         if (AttackHitEffect != null)
         {
             GameObject vfx = Instantiate(AttackHitEffect, hitPoint, Quaternion.identity);
-            Destroy(vfx, 2f); 
+            Destroy(vfx, 2f);
         }
     }
+    public void EnemyDieSound() 
+    {
+        if (DieSound != null)
+        {
+            AudioSource.PlayClipAtPoint(DieSound, transform.position);
+        }
+    }
+
+
 }
