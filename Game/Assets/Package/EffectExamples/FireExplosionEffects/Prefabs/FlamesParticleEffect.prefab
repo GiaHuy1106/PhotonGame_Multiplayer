@@ -4917,7 +4917,6 @@ GameObject:
   - component: {fileID: 4000010409153280}
   - component: {fileID: 198000013227194214}
   - component: {fileID: 199000010346745340}
-  - component: {fileID: 3885392880502645338}
   m_Layer: 0
   m_Name: FlamesParticleEffect
   m_TagString: Untagged
@@ -9559,18 +9558,6 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
---- !u!114 &3885392880502645338
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000010823978654}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d727c59c50fcaa240981067d65ac7be4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BurnEffectVisual
 --- !u!1 &1000013439165456
 GameObject:
   m_ObjectHideFlags: 0

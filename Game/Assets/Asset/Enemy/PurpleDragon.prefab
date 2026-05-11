@@ -1650,7 +1650,7 @@ MonoBehaviour:
   detectionRange: 10
   attackRange: 4
   attackCooldown: 2
-  damage: 10
+  damage: 8
   layerDamage:
     serializedVersion: 2
     m_Bits: 128
@@ -1839,7 +1839,7 @@ MonoBehaviour:
   m_Script: {fileID: 1039544458, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.HitboxRoot
-  Config: 3
+  Config: -1
   BroadRadius: 2.02
   Offset: {x: 0, y: 0, z: 0}
   GizmosColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
@@ -2518,7 +2518,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 171}
-  m_SizeDelta: {x: 354.1, y: 20}
+  m_SizeDelta: {x: 518.2, y: 44.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7449932782089781122
 CanvasRenderer:

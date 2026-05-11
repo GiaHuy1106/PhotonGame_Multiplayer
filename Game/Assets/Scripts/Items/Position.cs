@@ -8,7 +8,7 @@ using UnityEngine;
 public class Posion : NetworkBehaviour, IInteractable
 {
     bool isPlayerNear;
-    [SerializeField] float heal = 20f;
+    [SerializeField] float heal = 10f;
     [SerializeField] GameObject pickupIcon;
     [SerializeField] SphereCollider box;
     HashSet<NetworkObject> _objectsInZone = new HashSet<NetworkObject>();

@@ -34,6 +34,7 @@ public class CharacterInputHandler : MonoBehaviour
         {
             return;
         }
+        
         direction.x = Input.GetAxisRaw("Horizontal");
         direction.y = Input.GetAxisRaw("Vertical");
         isJump = Input.GetKeyDown(KeyCode.Space);

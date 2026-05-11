@@ -15,8 +15,9 @@ public class HPHandler : NetworkBehaviour
     [Networked]
     public NetworkBool IsDead { get; private set; }
     Transform hpUI;
-    public event Action<float, float> OnHealthChanged;
+    public event Action<bool> OnHealthChanged;
     public event Action OnDead;
+    public event Action OnHealth;
     private void Awake()
     {
         hpUI = healthBar.transform.parent;
@@ -51,6 +52,13 @@ public class HPHandler : NetworkBehaviour
             return;
 
         HP = Mathf.Clamp(HP + amount, 0, maxHP);
+        RPC_Recover();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    void RPC_Recover()
+    {
+        OnHealth?.Invoke();
     }
 
     public void TakeDamage(float damage)
@@ -77,7 +85,7 @@ public class HPHandler : NetworkBehaviour
         IsDead = true;
 
         OnDead?.Invoke();
-
+        hpUI.gameObject.SetActive(false);
         Debug.Log($"{Object.InputAuthority} died");
     }
 
@@ -92,7 +100,7 @@ public class HPHandler : NetworkBehaviour
 
     private void OnHPChanged()
     {
-        OnHealthChanged?.Invoke(HP, maxHP);
+        OnHealthChanged?.Invoke(true);
         healthBar.fillAmount = HP / maxHP;
     }    
 
