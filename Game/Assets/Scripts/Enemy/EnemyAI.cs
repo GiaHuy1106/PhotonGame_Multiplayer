@@ -42,6 +42,7 @@ public class EnemyAI : NetworkBehaviour, ITakeDamageable
     [Header("Timers")]
     public float getHitDuration = 0.5f;
     [Networked] private TickTimer hitStateTimer { get; set; }
+
     public float TimeToDie = 3f;
     [Networked] private TickTimer despawnTimer { get; set; }
 
@@ -54,6 +55,7 @@ public class EnemyAI : NetworkBehaviour, ITakeDamageable
     public event Action OnEnemyDie;
     // Trong Multiplayer, ta lưu ID hoặc tham chiếu thay vì GameObject.Find liên tục
     [Networked] private NetworkObject playerTarget { get; set; }
+    
 
     private void Awake()
     {
@@ -153,7 +155,10 @@ public class EnemyAI : NetworkBehaviour, ITakeDamageable
 
     private void HandleChasing(float dist)
     {
-        if (playerTarget == null) { currentState = EnemyState.Patrol; return; }
+        if (playerTarget == null) { 
+            currentState = EnemyState.Patrol; 
+            return; 
+        }
         agent.isStopped = false;
         agent.speed = chaseSpeed;
         agent.SetDestination(playerTarget.transform.position);
@@ -241,7 +246,7 @@ public class EnemyAI : NetworkBehaviour, ITakeDamageable
             
             currentState = EnemyState.GetHit;
             hitStateTimer = TickTimer.CreateFromSeconds(Runner, getHitDuration);
-            RPC_PlayHitEffects();
+            RPC_PlayGetHitAnim();
         }
     }
 
@@ -303,7 +308,7 @@ public class EnemyAI : NetworkBehaviour, ITakeDamageable
     private void RPC_PlayAttackAnim() { if (animator) animator.Play("Attack"); }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    private void RPC_PlayHitEffects() { if (animator) animator.Play("GetHit"); }
+    private void RPC_PlayGetHitAnim() { if (animator) animator.Play("GetHit"); }
    
 
     // --- ON CHANGED CALLBACKS ---  
@@ -323,6 +328,7 @@ public class EnemyAI : NetworkBehaviour, ITakeDamageable
                 break;                       
             case EnemyState.Die:
                 enemyHealth.Invisible();
+                GetComponent<Collider>().enabled = false;
                 animator.Play("Die");
                 break;
         }

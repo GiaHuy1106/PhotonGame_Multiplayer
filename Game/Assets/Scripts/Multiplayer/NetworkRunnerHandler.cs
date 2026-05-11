@@ -18,7 +18,7 @@ public class NetworkRunnerHandler : MonoBehaviour
     public string nickNamePlayer;
     public event Action<List<SessionInfo>> OnListSessionUpdate;
     public event Action<ShutdownReason> OnJoinSessionFailed;
-    public bool isJoinLobby { get; private set; } = false;
+    public bool isJoinLobby { get; set; } = false;
     public string passwordRoom;
     private void Awake()
     {
@@ -170,6 +170,8 @@ public class NetworkRunnerHandler : MonoBehaviour
     public void OnShutdown()
     {
         CleanUp();
+        isJoinLobby = false;
+        Cursor.lockState = CursorLockMode.None;
         SceneManager.LoadScene("SetupScene");
         _runner = Instantiate(networkRunnerPrefab);
     }

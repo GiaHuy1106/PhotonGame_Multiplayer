@@ -525,7 +525,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
   _currentState: 0
-  maxHealth: 100
+  maxHealth: 50
   hitboxRoot: {fileID: 0}
   _health: 0
   _IsDead: 0
@@ -536,7 +536,7 @@ MonoBehaviour:
   detectionRange: 10
   attackRange: 3
   attackCooldown: 2
-  damage: 5
+  damage: 4
   layerDamage:
     serializedVersion: 2
     m_Bits: 128
@@ -843,6 +843,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4047972025199878}
     m_Modifications:
+    - target: {fileID: 60502389785759697, guid: 956689274f04ab3479453bd313c7c87a, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 179.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 60502389785759697, guid: 956689274f04ab3479453bd313c7c87a, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 18.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 60502389785759697, guid: 956689274f04ab3479453bd313c7c87a, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 148
+      objectReference: {fileID: 0}
     - target: {fileID: 4235726260123831878, guid: 956689274f04ab3479453bd313c7c87a, type: 3}
       propertyPath: m_Name
       value: Canvas

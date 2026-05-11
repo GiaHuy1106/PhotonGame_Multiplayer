@@ -68,26 +68,20 @@ public class EnemyFX : MonoBehaviour
         }
     }
     
-    public void PlayDragonBossGrawl()
+    public void PlayDragonBossGrawl(Vector3 position)
     {
         if (DragonBossGrawl != null)
         {
-            audioSource.PlayOneShot(DragonBossGrawl);
+            AudioSource.PlayClipAtPoint(DragonBossGrawl, position);
 
         }
-    }
+    } 
 
-    public void PlayDragonRoarAndFire()
-    {
-        if (RoarSound != null) audioSource.PlayOneShot(RoarSound);
-        if (FireSound != null) audioSource.PlayOneShot(FireSound);
-    }
-
-    public void PlayDragonClaw()
+    public void PlayBossMeleeSound(Vector3 position)
     {
         if (DragonClaw != null)
         {
-            audioSource.PlayOneShot(DragonClaw);
+            AudioSource.PlayClipAtPoint(DragonClaw, position);
         }
     }
 
@@ -108,4 +102,24 @@ public class EnemyFX : MonoBehaviour
     }
 
 
+    public void PlayBossFlameSound()
+    {
+        if (RoarSound != null)
+        {
+            AudioSource.PlayClipAtPoint(RoarSound, transform.position);
+        }
+        if (FireSound != null)
+        {
+            AudioSource.PlayClipAtPoint(FireSound, transform.position);
+        }
+    }
+    public void PlayBossAggroRoar()
+    {
+        if (RoarSound != null)
+        {
+            AudioSource.PlayClipAtPoint(RoarSound, transform.position);
+        }
+    }
+   
+   
 }

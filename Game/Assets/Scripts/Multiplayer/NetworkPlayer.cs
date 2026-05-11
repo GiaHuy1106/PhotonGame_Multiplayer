@@ -78,10 +78,11 @@ public class NetworkPlayer : NetworkBehaviour, ITakeDamageable
 
     void OnDeadHPHandler()
     {
-        //ctx.ChangeCombatState(nameof(NoneState));
-        //ctx.ChangeMovementState(nameof(Die));
-        animator.Play(nameof(NoneState), 1);
-        animator.Play(nameof(Die), 0);
+        ctx.ChangeCombatState(nameof(NoneState));
+        ctx.ChangeMovementState(nameof(Die));
+        
+        //animator.Play(nameof(NoneState), 1);
+        //animator.Play(nameof(Die), 0);
     }
     public override void Spawned()
     {
@@ -119,7 +120,7 @@ public class NetworkPlayer : NetworkBehaviour, ITakeDamageable
     public bool isJumping { get; set; }    
     public override void FixedUpdateNetwork()
     {
-        if (Object.HasStateAuthority && hphandler.IsDead)
+        if (hphandler.IsDead)
         {
             return;
         }
@@ -131,7 +132,7 @@ public class NetworkPlayer : NetworkBehaviour, ITakeDamageable
             {
                 ctx.ChangeMovementState(nameof(JumpStart));
             }
-            if (inputData.isAttack && IsAttacking == false)
+            if (inputData.isAttack && !IsAttacking)
             {
                 ctx.ChangeCombatState(nameof(Attack01));
                 IsAttacking = true;
@@ -139,8 +140,7 @@ public class NetworkPlayer : NetworkBehaviour, ITakeDamageable
             if (inputData.isDefend)
             {
                 ctx.ChangeCombatState(nameof(Defend));               
-            }
-            
+            }          
             locomotion.Update(Runner.DeltaTime);
             combat.Update(Runner.DeltaTime);
             CheckFallRespawn();
@@ -174,7 +174,9 @@ public class NetworkPlayer : NetworkBehaviour, ITakeDamageable
             case LocomotionState.JumpEnd:
                 //ctx.anim.PlayClip(PlayerAnimatorController.JUMPEND_HASH);
                 break;
-            case LocomotionState.Die:
+            case LocomotionState.Die:                
+                GetComponent<CharacterController>().enabled = false;
+                GetComponent<HitboxRoot>().HitboxRootActive = false;
                 ctx.anim.PlayClip(PlayerAnimatorController.DIE_HASH);
                 break;            
             case LocomotionState.GetHit:
